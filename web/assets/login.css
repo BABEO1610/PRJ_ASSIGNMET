@@ -1,0 +1,102 @@
+/*
+Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+Click nbfs://nbhost/SystemFileSystem/Templates/ClientSide/css.css to edit this template
+*/
+/* 
+    Created on : Feb 25, 2026, 8:34:24 PM
+    Author     : ADMIN
+*/
+/* 1. Đặt lại chuẩn kích thước (RẤT QUAN TRỌNG) */
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+/* 2. Dùng Flexbox để căn giữa TOÀN BỘ màn hình */
+body {
+    background-color: #f0f2f5; /* Màu nền xám nhạt như Facebook */
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh; /* Chiếm 100% chiều cao màn hình */
+}
+
+/* 3. Chiếc thẻ (Card) chứa form */
+.login-container {
+    background: white;
+    padding: 40px 30px;
+    border-radius: 10px; /* Bo góc tròn trịa */
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1); /* Đổ bóng 3D */
+    width: 100%;
+    max-width: 400px; /* Không cho form phình to quá trên máy tính */
+}
+
+.login-container h2 {
+    text-align: center;
+    margin-bottom: 20px;
+    color: #333;
+}
+
+/* 4. Khối báo lỗi đỏ lự */
+.error-msg {
+    color: #d93025;
+    background-color: #fce8e6;
+    padding: 10px;
+    border-radius: 5px;
+    margin-bottom: 15px;
+    text-align: center;
+    font-size: 14px;
+    border: 1px solid #f2a6a2;
+}
+
+/* Mẹo cực hay: Ẩn cục báo lỗi đi nếu không có lỗi */
+.error-msg:empty {
+    display: none;
+}
+
+/* 5. Định dạng từng ô nhập liệu */
+.input-group {
+    margin-bottom: 20px;
+}
+
+.input-group label {
+    display: block;
+    margin-bottom: 8px;
+    color: #555;
+    font-weight: 500;
+}
+
+.input-group input {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 16px;
+    transition: border-color 0.3s;
+}
+
+/* Hiệu ứng viền xanh khi click vào ô nhập */
+.input-group input:focus {
+    border-color: #1a73e8; 
+    outline: none;
+}
+
+/* 6. Nút bấm xanh dương nổi bật */
+.btn-login {
+    width: 100%;
+    padding: 12px;
+    background-color: #1a73e8;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.btn-login:hover {
+    background-color: #1557b0; /* Màu đậm hơn khi di chuột vào */
+}
