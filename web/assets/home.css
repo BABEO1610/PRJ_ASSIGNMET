@@ -1,0 +1,164 @@
+/* Bảng màu: F7F8F0, 9CD5FF, 7AAACE, 355872 */
+
+body { 
+    font-family: Arial, sans-serif; 
+    margin: 0; 
+    padding: 0; 
+    background-color: #ffffff; 
+    color: #355872; 
+}
+
+/* Top Bar */
+.top-bar { 
+    background-color: #355872; 
+    color: #F7F8F0; 
+    padding: 10px 20px; 
+    font-size: 14px; 
+    height: 40px; 
+    display: flex; 
+    align-items: center; 
+}
+
+/* Layout Container */
+.app-container { 
+    display: flex; 
+    min-height: calc(100vh - 40px); 
+}
+
+/* Sidebar */
+.sidebar { 
+    width: 250px; 
+    background-color: #F7F8F0; 
+    border-right: 2px solid #9CD5FF; 
+    display: flex; 
+    flex-direction: column; 
+}
+
+.user-profile { 
+    padding: 40px 20px; 
+    text-align: center; 
+}
+
+.avatar-circle { 
+    width: 100px; 
+    height: 100px; 
+    background-color: #c0c0c0; 
+    border-radius: 50%; 
+    margin: 0 auto 15px; 
+    display: flex; 
+    align-items: center; 
+    justify-content: center; 
+    color: white; 
+}
+
+.user-profile h4 { 
+    margin: 0; 
+    font-weight: bold; 
+    color: #355872; 
+}
+
+/* Menu Items */
+.menu-item { 
+    display: block; 
+    padding: 15px 20px; 
+    background-color: #9CD5FF; 
+    color: #355872; 
+    text-decoration: none; 
+    font-weight: bold; 
+    font-size: 16px; 
+    margin-bottom: 5px; 
+    transition: background-color 0.2s; 
+}
+
+.menu-item:hover, .menu-item.active { 
+    background-color: #7AAACE; 
+    color: #F7F8F0; 
+}
+
+/* Main Content */
+.main-content { 
+    flex: 1; 
+    display: flex; 
+    flex-direction: column; 
+}
+
+.banner { 
+    background: linear-gradient(rgba(122, 170, 206, 0.4), rgba(53, 88, 114, 0.6)), 
+                url('https://vcdn1-kinhdoanh.vnecdn.net/2022/12/21/Vinhomes-Grand-Park-1671613437-1422-1671613481.jpg?w=1200&h=0&q=100&dpr=1&fit=crop&s=u_vX-0S6A6e_e7Qh6_A7_A'); 
+    background-size: cover; 
+    background-position: center; 
+    height: 180px; 
+    display: flex; 
+    align-items: center; 
+    justify-content: center; 
+    color: #F7F8F0; 
+    font-size: 36px; 
+    font-weight: bold; 
+}
+
+/* Section & Tables */
+.content-section { 
+    padding: 20px 40px; 
+}
+
+.section-header { 
+    display: flex; 
+    justify-content: space-between; 
+    align-items: center; 
+    margin-bottom: 10px; 
+    margin-top: 20px; 
+}
+
+.section-header h3 { 
+    margin: 0; 
+    font-weight: bold; 
+    color: #355872; 
+}
+
+/* Pagination */
+.pagination-controls button { 
+    background-color: #355872; 
+    color: #F7F8F0; 
+    border: none; 
+    padding: 5px 15px; 
+    margin-left: 5px; 
+    border-radius: 4px; 
+    cursor: pointer; 
+    font-weight: bold; 
+}
+
+.pagination-controls button:hover { 
+    background-color: #7AAACE; 
+}
+
+.pagination-controls span { 
+    font-size: 14px; 
+    margin: 0 10px; 
+    font-weight: bold; 
+}
+
+/* Table Styling */
+table { 
+    width: 100%; 
+    border-collapse: collapse; 
+    margin-bottom: 20px; 
+    border-bottom: 2px solid #7AAACE; 
+}
+
+th, td { 
+    padding: 12px 15px; 
+    text-align: left; 
+    border-bottom: 1px solid #e0e0e0; 
+}
+
+th { 
+    background-color: #F7F8F0; 
+    color: #355872; 
+    font-weight: bold; 
+    border-top: 1px solid #e0e0e0; 
+    border-bottom: 2px solid #7AAACE; 
+}
+
+tr:nth-child(even) { 
+    background-color: #fcfcfc; 
+}

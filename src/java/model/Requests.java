@@ -4,6 +4,7 @@
  */
 package model;
 
+import java.sql.Timestamp;
 import java.sql.Date;
 
 /**
@@ -12,26 +13,26 @@ import java.sql.Date;
  */
 public class Requests {
     private int requestId;
-    private Users resident;
-    private Apartments apartment;
-    private RequestTypes requestType;
+    private int residentID;
+    private String residentName;
+    private int apartmentID;
+    private int requestTypeID;
     private String title;
     private String description;
-    private Date transferDate;
+    private Timestamp transferDate;
     private String status;
-    private Date createdAt;
-    private Users approvedBy;
-    private Users assignedTo;
-
+    private Timestamp createdAt;
+    private int approvedBy;
+    private int assignedTo;
+    
     public Requests() {}
 
-    public Requests(int requestId, Users resident, Apartments apartment, RequestTypes requestType,
-                    String title, String description, Date transferDate, String status, 
-                    Date createdAt, Users approvedBy, Users assignedTo) {
+    public Requests(int requestId, int residentID, String residentName, int apartmentID, int requestTypeID, String title, String description, Timestamp transferDate, String status, Timestamp createdAt, int approvedBy, int assignedTo) {
         this.requestId = requestId;
-        this.resident = resident;
-        this.apartment = apartment;
-        this.requestType = requestType;
+        this.residentID = residentID;
+        this.residentName = residentName;
+        this.apartmentID = apartmentID;
+        this.requestTypeID = requestTypeID;
         this.title = title;
         this.description = description;
         this.transferDate = transferDate;
@@ -41,36 +42,101 @@ public class Requests {
         this.assignedTo = assignedTo;
     }
 
-    public int getRequestId() { return requestId; }
-    public void setRequestId(int requestId) { this.requestId = requestId; }
+    public int getRequestId() {
+        return requestId;
+    }
 
-    public Users getResident() { return resident; }
-    public void setResident(Users resident) { this.resident = resident; }
+    public void setRequestId(int requestId) {
+        this.requestId = requestId;
+    }
 
-    public Apartments getApartment() { return apartment; }
-    public void setApartment(Apartments apartment) { this.apartment = apartment; }
+    public int getResidentID() {
+        return residentID;
+    }
 
-    public RequestTypes getRequestType() { return requestType; }
-    public void setRequestType(RequestTypes requestType) { this.requestType = requestType; }
+    public void setResidentID(int residentID) {
+        this.residentID = residentID;
+    }
 
-    public String getTitle() { return title; }
-    public void setTitle(String title) { this.title = title; }
+    public String getResidentName() {
+        return residentName;
+    }
 
-    public String getDescription() { return description; }
-    public void setDescription(String description) { this.description = description; }
+    public void setResidentName(String residentName) {
+        this.residentName = residentName;
+    }
 
-    public Date getTransferDate() { return transferDate; }
-    public void setTransferDate(Date transferDate) { this.transferDate = transferDate; }
+    public int getApartmentID() {
+        return apartmentID;
+    }
 
-    public String getStatus() { return status; }
-    public void setStatus(String status) { this.status = status; }
+    public void setApartmentID(int apartmentID) {
+        this.apartmentID = apartmentID;
+    }
 
-    public Date getCreatedAt() { return createdAt; }
-    public void setCreatedAt(Date createdAt) { this.createdAt = createdAt; }
+    public int getRequestTypeID() {
+        return requestTypeID;
+    }
 
-    public Users getApprovedBy() { return approvedBy; }
-    public void setApprovedBy(Users approvedBy) { this.approvedBy = approvedBy; }
+    public void setRequestTypeID(int requestTypeID) {
+        this.requestTypeID = requestTypeID;
+    }
 
-    public Users getAssignedTo() { return assignedTo; }
-    public void setAssignedTo(Users assignedTo) { this.assignedTo = assignedTo; }
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public Timestamp getTransferDate() {
+        return transferDate;
+    }
+
+    public void setTransferDate(Timestamp transferDate) {
+        this.transferDate = transferDate;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
+
+    public Timestamp getCreatedAt() {
+        return createdAt;
+    }
+
+    public void setCreatedAt(Timestamp createdAt) {
+        this.createdAt = createdAt;
+    }
+
+    public int getApprovedBy() {
+        return approvedBy;
+    }
+
+    public void setApprovedBy(int approvedBy) {
+        this.approvedBy = approvedBy;
+    }
+
+    public int getAssignedTo() {
+        return assignedTo;
+    }
+
+    public void setAssignedTo(int assignedTo) {
+        this.assignedTo = assignedTo;
+    }
+
+    
 }

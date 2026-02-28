@@ -45,7 +45,7 @@ public class Login extends HttpServlet {
             session.setAttribute("USER_INFO", account);
             
             // Chuyển hướng sang trang chủ
-            response.sendRedirect("home.jsp"); 
+            response.sendRedirect("Home"); 
         } else {
             // Đăng nhập THẤT BẠI: Nhét câu chửi/thông báo lỗi vào hộp (Request) và ném lại trang cũ
             request.setAttribute("ERROR_MSG", "Sai tên đăng nhập hoặc mật khẩu!");
