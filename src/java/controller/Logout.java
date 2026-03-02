@@ -5,25 +5,21 @@
 
 package controller;
 
-import dal.UserDAO;
 import java.io.IOException;
 import java.io.PrintWriter;
 import jakarta.servlet.ServletException;
+import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
-import java.util.ArrayList;
-import java.util.List;
-import model.Notifications;
-import model.Requests;
 
 /**
  *
  * @author DELL
  */
-//@WebServlet(name = "HomeServlet", urlPatterns = {"/Home"})
-public class Home extends HttpServlet {
+@WebServlet(name="Logout", urlPatterns={"/Logout"})
+public class Logout extends HttpServlet {
    
     /** 
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code> methods.
@@ -40,10 +36,10 @@ public class Home extends HttpServlet {
             out.println("<!DOCTYPE html>");
             out.println("<html>");
             out.println("<head>");
-            out.println("<title>Servlet Home</title>");  
+            out.println("<title>Servlet Logout</title>");  
             out.println("</head>");
             out.println("<body>");
-            out.println("<h1>Servlet Home at " + request.getContextPath () + "</h1>");
+            out.println("<h1>Servlet Logout at " + request.getContextPath () + "</h1>");
             out.println("</body>");
             out.println("</html>");
         }
@@ -60,14 +56,11 @@ public class Home extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
     throws ServletException, IOException {
-        UserDAO dao = new UserDAO();
-        List<Notifications> listN = dao.getAllNotifications();
-        List<Requests> listR = dao.getAllRequests();  
-        
-        request.setAttribute("listNotif", listN);
-        request.setAttribute("listReq", listR);
-        
-        request.getRequestDispatcher("home.jsp").forward(request, response);
+        HttpSession session = request.getSession(false);
+        if (session != null) {
+            session.invalidate();
+        }
+        response.sendRedirect("login");
     } 
 
     /** 
@@ -80,6 +73,7 @@ public class Home extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
     throws ServletException, IOException {
+        processRequest(request, response);
     }
 
     /** 
