@@ -1,0 +1,98 @@
+/* Tổng thể container */
+body {
+    display: flex;
+    justify-content: center; /* Căn giữa theo chiều ngang */
+    align-items: center;     /* Căn giữa theo chiều dọc */
+    min-height: 100vh;       /* Quan trọng: Chiều cao tối thiểu bằng 100% màn hình */
+}
+.app-container {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: #f4f7f9;
+}
+
+/* Khung bao ngoài của form */
+.form-wrapper {
+    background: #ffffff;
+    border-radius: 12px;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+    
+    /* CHỈNH LẠI CÁC DÒNG NÀY */
+    width: 600px;        /* Tăng trực tiếp độ rộng của form lên 600px hoặc 700px tùy ý */
+    padding: 40px;       /* Padding vừa phải (40px) để tạo khoảng trống bên trong */
+    
+    box-sizing: border-box; /* Giữ cố định kích thước, không cho padding làm biến dạng form */
+    margin: 20px auto;   /* Căn giữa cái hộp ra giữa màn hình */
+}
+
+/* Tiêu đề form */
+.form-title {
+    color: #355872;
+    text-align: center;
+    margin-bottom: 25px;
+    font-size: 24px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+/* Từng dòng nhập liệu */
+.row-input {
+    margin-bottom: 15px;
+    display: flex;
+    flex-direction: column;
+}
+
+.row-input label {
+    font-weight: 600;
+    margin-bottom: 8px;
+    color: #444;
+}
+
+/* Input, Select */
+.row-input input, 
+.row-input select {
+    padding: 12px;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    font-size: 15px;
+    transition: all 0.3s ease;
+}
+
+/* Hiệu ứng khi click vào input */
+.row-input input:focus, 
+.row-input select:focus {
+    border-color: #355872;
+    outline: none;
+    box-shadow: 0 0 5px rgba(53, 88, 114, 0.2);
+}
+
+/* Style cho trường readonly (Username khi update) */
+.lock-input {
+    background-color: #f0f0f0;
+    cursor: not-allowed;
+    color: #888;
+}
+
+/* Nút bấm Lưu */
+.btn-save-data {
+    width: 100%;
+    padding: 12px;
+    background-color: #355872;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background 0.3s ease;
+    margin-top: 10px;
+}
+
+.btn-save-data:hover {
+    background-color: #2a465a;
+}
+
+/* Liên kết Hủy bỏ */
+.form-wrapper a:hover {
+    text-decoration: underline !important;
+    opacity: 0.8;
+}

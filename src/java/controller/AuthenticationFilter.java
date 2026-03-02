@@ -33,7 +33,9 @@ public class AuthenticationFilter implements Filter {
         
         // (Tùy chọn) Cho phép tải CSS, ảnh, JS để trang Login không bị lỗi giao diện trắng tinh
         boolean isStaticResource = requestURI.startsWith(req.getContextPath() + "/css/") || 
-                                   requestURI.startsWith(req.getContextPath() + "/images/");
+                           requestURI.startsWith(req.getContextPath() + "/images/") ||
+                           requestURI.startsWith(req.getContextPath() + "/assets/") || 
+                           requestURI.startsWith(req.getContextPath() + "/vendor/");
 
         // Kiểm tra xem đã có session và thông tin đăng nhập chưa
         boolean isLoggedIn = (session != null && session.getAttribute("USER_INFO") != null);

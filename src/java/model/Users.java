@@ -9,15 +9,18 @@ package model;
  * @author ADMIN
  */
 public class Users {
+
     private int userId;
     private String username;
     private String passwordHash;
     private String fullName;
     private String email;
     private String phone;
-    private boolean isActive;   
+    private boolean isActive;
     private Roles role;
-    public Users() {}
+
+    public Users() {
+    }
 
     public Users(int userId, String username, String passwordHash, String fullName, String email, String phone, boolean isActive, Roles role) {
         this.userId = userId;
@@ -93,6 +96,16 @@ public class Users {
     public void setRole(Roles role) {
         this.role = role;
     }
-    
-    
+    // Thêm một Object StaffProfiles vào trong Users
+    private StaffProfiles staffProfile;
+
+// Generate Getter và Setter
+    public StaffProfiles getStaffProfile() {
+        return staffProfile;
+    }
+
+    public void setStaffProfile(StaffProfiles staffProfile) {
+        this.staffProfile = staffProfile;
+    }
+
 }

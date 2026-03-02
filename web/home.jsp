@@ -28,7 +28,7 @@
         
         <a href="Home" class="menu-item active">Trang chủ</a>
         <a href="Apartments" class="menu-item">Quản lý căn hộ</a>
-        <a href="Employees" class="menu-item">Quản lý nhân viên</a>
+        <a href="employees" class="menu-item">Quản lý nhân viên</a>
         <a href="Requests" class="menu-item">Quản lý yêu cầu cư dân</a>
         <a href="Notifications" class="menu-item">Thông báo</a>
         <a href="Logout" class="menu-item" style="margin-top: 20px;">Đăng xuất</a>
