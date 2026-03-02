@@ -6,7 +6,7 @@ package model;
 
 import java.util.Date;
 
-public class Notifications {
+public class Notifications{
     private int NotificationId;
     private String Title;
     private String Content;
