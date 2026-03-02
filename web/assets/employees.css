@@ -1,0 +1,72 @@
+/* Tiêu đề trang và nút thêm mới */
+.content-section { padding: 30px 40px; }
+
+.emp-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.btn-add-new {
+    background-color: #355872;
+    color: white;
+    padding: 10px 20px;
+    border-radius: 4px;
+    text-decoration: none;
+    font-weight: bold;
+    font-size: 14px;
+}
+
+/* Table Style match 100% trang Home */
+table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+th {
+    background-color: #F7F8F0;
+    color: #355872;
+    text-align: left;
+    padding: 15px;
+    border-bottom: 2px solid #7AAACE;
+}
+
+td {
+    padding: 15px;
+    border-bottom: 1px solid #eee;
+    color: #444;
+}
+
+/* Nút Sửa/Xóa tinh tế */
+.action-link {
+    color: #355872;
+    font-weight: bold;
+    text-decoration: none;
+    margin-right: 15px;
+}
+
+.btn-delete-ui {
+    color: #ff4d4d;
+    background: none;
+    border: 1px solid #ff4d4d;
+    padding: 4px 10px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-weight: bold;
+    padding-top: 6.5px;
+}
+
+.btn-delete-ui:hover { background: #ff4d4d; color: white; }
+
+.btn-update-ui {
+    color: green;
+    background: none;
+    border: 1px solid green;
+    padding: 4px 10px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-weight: bold;
+}
+
+.btn-update-ui:hover { background: green; color: white; }
