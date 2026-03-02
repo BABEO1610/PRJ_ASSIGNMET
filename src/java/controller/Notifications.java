@@ -4,7 +4,7 @@
  */
 package controller;
 
-import dal.UserDAO;
+import dal.NotificationDAO;
 import java.util.List;
 import model.Users;
 import java.io.IOException;
@@ -62,7 +62,7 @@ public class Notifications extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
 
-        UserDAO dao = new UserDAO();
+        NotificationDAO dao = new NotificationDAO();
 
         String id_raw = request.getParameter("id");
 
@@ -97,7 +97,7 @@ public class Notifications extends HttpServlet {
         HttpSession session = request.getSession();
         Users u = (Users) session.getAttribute("USER_INFO");
 
-        UserDAO dao = new UserDAO();
+        NotificationDAO dao = new NotificationDAO();
         dao.insertNotification(title, content, u.getUserId());
 
         response.sendRedirect("Notifications");
