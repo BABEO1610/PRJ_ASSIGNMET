@@ -11,6 +11,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import model.Apartments;
 import model.Notifications;
 import model.Positions;
 import model.Requests;
@@ -395,4 +396,151 @@ public class UserDAO extends DBContext {
 
         return roleId; // Trả về roleId (hoặc -1 nếu lỗi/không tồn tại)
     }
+    
+    public List<Apartments> getAllApartments() {
+    List<Apartments> list = new ArrayList<>();
+    // SQL: Lấy thông tin căn hộ + Lấy FullName từ bảng Users gán cho OwnerName
+    String sql = "SELECT a.[ApartmentId], a.[ApartmentNumber], a.[Floor], a.[Area], "
+               + "a.[Types], a.[Status], a.[OwnerId], u.[FullName] AS OwnerName "
+               + "FROM [Apartments] a LEFT JOIN [Users] u ON a.[OwnerId] = u.[UserId]";
+
+    try {
+        PreparedStatement ps = connection.prepareStatement(sql);
+        ResultSet rs = ps.executeQuery();
+        while (rs.next()) {
+            Apartments apt = new Apartments();
+            apt.setApartmentId(rs.getInt("ApartmentId"));
+            apt.setApartmentNumber(rs.getString("ApartmentNumber"));
+            apt.setFloor(rs.getInt("Floor"));
+            apt.setArea(rs.getDouble("Area"));
+            apt.setTypes(rs.getNString("Types"));
+            apt.setStatus(rs.getNString("Status"));
+            
+            // LỖI 1: Gán OwnerId là kiểu int
+            apt.setOwnerId(rs.getInt("OwnerId")); 
+            
+            // LỖI 2: Lấy OwnerName từ kết quả JOIN (vì bảng Apartments không có cột này)
+            apt.setOwnerName(rs.getNString("OwnerName")); 
+
+            list.add(apt);
+        }
+    } catch (SQLException e) {
+        System.out.println("Lỗi getAllApartments: " + e.getMessage());
+    }
+    return list;
+}
+    
+    public Apartments getApartmentById(int id) {
+    String sql = "SELECT a.*, u.FullName AS OwnerName FROM Apartments a "
+               + "LEFT JOIN Users u ON a.OwnerId = u.UserId WHERE a.ApartmentId = ?";
+    try (PreparedStatement ps = connection.prepareStatement(sql)) {
+        ps.setInt(1, id);
+        ResultSet rs = ps.executeQuery();
+        if (rs.next()) {
+            Apartments a = new Apartments();
+            a.setApartmentId(rs.getInt("ApartmentId"));
+            a.setApartmentNumber(rs.getString("ApartmentNumber"));
+            a.setFloor(rs.getInt("Floor"));
+            a.setArea(rs.getDouble("Area"));
+            a.setTypes(rs.getNString("Types"));
+            a.setStatus(rs.getNString("Status"));
+            a.setOwnerName(rs.getNString("OwnerName"));
+            return a;
+        }
+    } catch (SQLException e) { e.printStackTrace(); }
+    return null;
+}
+    
+    public boolean updateApartment(int id, String number, int floor, double area, String types, String status) {
+    String sql = "UPDATE [Apartments] SET [ApartmentNumber] = ?, [Floor] = ?, "
+               + "[Area] = ?, [Types] = ?, [Status] = ? WHERE [ApartmentId] = ?";
+    try (PreparedStatement ps = connection.prepareStatement(sql)) {
+        ps.setString(1, number);
+        ps.setInt(2, floor);
+        ps.setDouble(3, area);
+        ps.setNString(4, types);
+        ps.setNString(5, status);
+        ps.setInt(6, id);
+        return ps.executeUpdate() > 0;
+    } catch (SQLException e) {
+        e.printStackTrace();
+        return false;
+    }
+}
+    
+    public boolean deleteApartment(int id) {
+    // Câu lệnh SQL xóa căn hộ dựa trên ApartmentId
+    String sql = "DELETE FROM [Apartments] WHERE [ApartmentId] = ?";
+    
+    // Kiểm tra kết nối trước khi thực hiện
+    if (this.connection == null) {
+        this.connection = getConnection();
+    }
+
+    try (PreparedStatement ps = connection.prepareStatement(sql)) {
+        ps.setInt(1, id);
+        
+        // Thực thi câu lệnh
+        int affectedRows = ps.executeUpdate();
+        return affectedRows > 0;
+        
+    } catch (SQLException e) {
+        // In lỗi ra console để debug (ví dụ: lỗi Foreign Key Constraint)
+        System.out.println("Lỗi khi xóa căn hộ: " + e.getMessage());
+        return false;
+    }
+}
+    
+    public boolean addApartment(String number, int floor, double area, String types, String status, int ownerId) {
+    // Câu lệnh INSERT chính xác theo bảng Apartments của bạn
+    String sql = "INSERT INTO [Apartments] ([ApartmentNumber], [Floor], [Area], [Types], [Status], [OwnerId]) "
+               + "VALUES (?, ?, ?, ?, ?, ?)";
+    
+    try (PreparedStatement ps = connection.prepareStatement(sql)) {
+        ps.setString(1, number);
+        ps.setInt(2, floor);
+        ps.setDouble(3, area);
+        ps.setNString(4, types);
+        ps.setNString(5, status);
+        
+        // Xử lý logic OwnerId: Nếu là 0 (không nhập) thì set NULL trong DB
+        if (ownerId > 0) {
+            ps.setInt(6, ownerId);
+        } else {
+            ps.setNull(6, java.sql.Types.INTEGER);
+        }
+        
+        return ps.executeUpdate() > 0;
+    } catch (SQLException e) {
+        e.printStackTrace();
+        return false;
+    }
+}
+    
+    public Apartments getApartmentByResidentId(int userId) {
+    // Truy vấn căn hộ thông qua bảng trung gian ApartmentResidents
+    String sql = "SELECT a.* FROM Apartments a " +
+                 "JOIN ApartmentResidents ar ON a.ApartmentId = ar.ApartmentId " +
+                 "WHERE ar.UserId = ? AND ar.IsActive = 1";
+    try {
+        if (connection == null) connection = getConnection();
+        PreparedStatement ps = connection.prepareStatement(sql);
+        ps.setInt(1, userId);
+        ResultSet rs = ps.executeQuery();
+        if (rs.next()) {
+            Apartments a = new Apartments();
+            a.setApartmentId(rs.getInt("ApartmentId"));
+            a.setApartmentNumber(rs.getString("ApartmentNumber"));
+            a.setFloor(rs.getInt("Floor"));
+            a.setArea(rs.getDouble("Area"));
+            a.setTypes(rs.getNString("Types"));
+            a.setStatus(rs.getNString("Status"));
+            return a;
+        }
+    } catch (SQLException e) {
+        e.printStackTrace();
+    }
+    return null;
+}
+    
 }
