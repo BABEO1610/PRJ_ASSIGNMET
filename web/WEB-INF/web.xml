@@ -9,12 +9,27 @@
         <url-pattern>/Home</url-pattern>
     </servlet-mapping>
     <servlet>
-    <servlet-name>Notification</servlet-name>
-    <servlet-class>controller.Notification</servlet-class>
-</servlet>
-
-<servlet-mapping>
-    <servlet-name>Notification</servlet-name>
-    <url-pattern>/Notification</url-pattern>
-</servlet-mapping>
+        <servlet-name>Notification</servlet-name>
+        <servlet-class>controller.Notification</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>Notification</servlet-name>
+        <url-pattern>/Notification</url-pattern>
+    </servlet-mapping>
+    <servlet>
+        <servlet-name>Requests</servlet-name>
+        <servlet-class>controller.Requests</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>Requests</servlet-name>
+        <url-pattern>/Requests</url-pattern>
+    </servlet-mapping>
+    <servlet>
+        <servlet-name>AssignRequest</servlet-name>
+        <servlet-class>controller.AssignRequest</servlet-class> 
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>AssignRequest</servlet-name>
+        <url-pattern>/AssignRequest</url-pattern>
+    </servlet-mapping>
 </web-app>
