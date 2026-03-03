@@ -14,6 +14,7 @@ import java.util.List;
 import model.Notifications;
 import model.Positions;
 import model.Requests;
+import model.ServiceTypes;
 import model.StaffProfiles;
 
 public class UserDAO extends DBContext {
@@ -421,16 +422,23 @@ public class UserDAO extends DBContext {
         return list;
     }
 
-    public List<model.ServiceTypes> getAllServiceTypes() {
-        List<model.ServiceTypes> list = new ArrayList<>();
-        String sql = "SELECT * FROM ServiceTypes";
+    public List<ServiceTypes> getAvailableServices(int residentId) {
+
+        List<ServiceTypes> list = new ArrayList<>();
+
+        String sql = "SELECT * FROM ServiceTypes st "
+                + "WHERE NOT EXISTS ( "
+                + "   SELECT 1 FROM ResidentServices rs "
+                + "   WHERE rs.ServiceTypeId = st.ServiceTypeId "
+                + "   AND rs.ResidentId = ? AND rs.IsActive = 1 )";
 
         try {
             PreparedStatement st = connection.prepareStatement(sql);
+            st.setInt(1, residentId);
             ResultSet rs = st.executeQuery();
 
             while (rs.next()) {
-                model.ServiceTypes s = new model.ServiceTypes();
+                ServiceTypes s = new ServiceTypes();
                 s.setServiceTypeId(rs.getInt("ServiceTypeId"));
                 s.setServiceName(rs.getString("ServiceName"));
                 s.setUnit(rs.getString("Unit"));
@@ -440,19 +448,47 @@ public class UserDAO extends DBContext {
         } catch (Exception e) {
             System.out.println(e);
         }
+
         return list;
     }
 
     public void registerServices(int residentId, String[] serviceIds) {
-        String sql = "INSERT INTO ResidentServices (ResidentId, ServiceTypeId) VALUES (?, ?)";
+
+        String checkSql = "SELECT IsActive FROM ResidentServices "
+                + "WHERE ResidentId = ? AND ServiceTypeId = ?";
+
+        String insertSql = "INSERT INTO ResidentServices (ResidentId, ServiceTypeId, RegisteredAt, IsActive) "
+                + "VALUES (?, ?, GETDATE(), 1)";
+
+        String updateSql = "UPDATE ResidentServices SET IsActive = 1, RegisteredAt = GETDATE() "
+                + "WHERE ResidentId = ? AND ServiceTypeId = ?";
 
         try {
+
             for (String id : serviceIds) {
-                PreparedStatement st = connection.prepareStatement(sql);
-                st.setInt(1, residentId);
-                st.setInt(2, Integer.parseInt(id));
-                st.executeUpdate();
+
+                int serviceId = Integer.parseInt(id);
+
+                PreparedStatement checkSt = connection.prepareStatement(checkSql);
+                checkSt.setInt(1, residentId);
+                checkSt.setInt(2, serviceId);
+                ResultSet rs = checkSt.executeQuery();
+
+                if (rs.next()) {
+                    // Đã tồn tại → update
+                    PreparedStatement updateSt = connection.prepareStatement(updateSql);
+                    updateSt.setInt(1, residentId);
+                    updateSt.setInt(2, serviceId);
+                    updateSt.executeUpdate();
+                } else {
+                    // Chưa tồn tại → insert mới
+                    PreparedStatement insertSt = connection.prepareStatement(insertSql);
+                    insertSt.setInt(1, residentId);
+                    insertSt.setInt(2, serviceId);
+                    insertSt.executeUpdate();
+                }
             }
+
         } catch (Exception e) {
             System.out.println("Lỗi registerServices: " + e.getMessage());
         }
