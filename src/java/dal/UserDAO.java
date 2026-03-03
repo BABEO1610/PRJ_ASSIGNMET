@@ -339,15 +339,15 @@ public class UserDAO extends DBContext {
         }
         return list;
     }
-    
+
     public List<Requests> getRequestsByResidentId(int residentId) {
         List<Requests> list = new ArrayList<>();
         // Lọc theo ResidentId của người đang đăng nhập
-        String sql = "SELECT r.*, u.FullName AS ResidentName " +
-                     "FROM Requests r " +
-                     "LEFT JOIN Users u ON r.ResidentId = u.UserId " +
-                     "WHERE r.ResidentId = ? " +
-                     "ORDER BY r.CreatedAt DESC";
+        String sql = "SELECT r.*, u.FullName AS ResidentName "
+                + "FROM Requests r "
+                + "LEFT JOIN Users u ON r.ResidentId = u.UserId "
+                + "WHERE r.ResidentId = ? "
+                + "ORDER BY r.CreatedAt DESC";
         try {
             PreparedStatement st = connection.prepareStatement(sql);
             st.setInt(1, residentId); // Truyền ID vào câu SQL
@@ -371,7 +371,7 @@ public class UserDAO extends DBContext {
         }
         return list;
     }
-    
+
     public int getRoleIDByuserID(int userId) {
         int roleId = -1; // Đặt giá trị mặc định là -1 (nghĩa là không tìm thấy)
 
@@ -394,5 +394,81 @@ public class UserDAO extends DBContext {
         }
 
         return roleId; // Trả về roleId (hoặc -1 nếu lỗi/không tồn tại)
+    }
+
+    public List<model.ServiceTypes> getServicesByResidentId(int residentId) {
+        List<model.ServiceTypes> list = new ArrayList<>();
+        String sql = "SELECT st.* FROM ResidentServices rs "
+                + "JOIN ServiceTypes st ON rs.ServiceTypeId = st.ServiceTypeId "
+                + "WHERE rs.ResidentId = ? AND rs.IsActive = 1";
+
+        try {
+            PreparedStatement st = connection.prepareStatement(sql);
+            st.setInt(1, residentId);
+            ResultSet rs = st.executeQuery();
+
+            while (rs.next()) {
+                model.ServiceTypes s = new model.ServiceTypes();
+                s.setServiceTypeId(rs.getInt("ServiceTypeId"));
+                s.setServiceName(rs.getString("ServiceName"));
+                s.setUnit(rs.getString("Unit"));
+                s.setPricePerUnit(rs.getDouble("PricePerUnit"));
+                list.add(s);
+            }
+        } catch (Exception e) {
+            System.out.println("Lỗi getServicesByResidentId: " + e.getMessage());
+        }
+        return list;
+    }
+
+    public List<model.ServiceTypes> getAllServiceTypes() {
+        List<model.ServiceTypes> list = new ArrayList<>();
+        String sql = "SELECT * FROM ServiceTypes";
+
+        try {
+            PreparedStatement st = connection.prepareStatement(sql);
+            ResultSet rs = st.executeQuery();
+
+            while (rs.next()) {
+                model.ServiceTypes s = new model.ServiceTypes();
+                s.setServiceTypeId(rs.getInt("ServiceTypeId"));
+                s.setServiceName(rs.getString("ServiceName"));
+                s.setUnit(rs.getString("Unit"));
+                s.setPricePerUnit(rs.getDouble("PricePerUnit"));
+                list.add(s);
+            }
+        } catch (Exception e) {
+            System.out.println(e);
+        }
+        return list;
+    }
+
+    public void registerServices(int residentId, String[] serviceIds) {
+        String sql = "INSERT INTO ResidentServices (ResidentId, ServiceTypeId) VALUES (?, ?)";
+
+        try {
+            for (String id : serviceIds) {
+                PreparedStatement st = connection.prepareStatement(sql);
+                st.setInt(1, residentId);
+                st.setInt(2, Integer.parseInt(id));
+                st.executeUpdate();
+            }
+        } catch (Exception e) {
+            System.out.println("Lỗi registerServices: " + e.getMessage());
+        }
+    }
+
+    public void cancelService(int residentId, int serviceId) {
+        String sql = "UPDATE ResidentServices SET IsActive = 0 "
+                + "WHERE ResidentId = ? AND ServiceTypeId = ?";
+
+        try {
+            PreparedStatement st = connection.prepareStatement(sql);
+            st.setInt(1, residentId);
+            st.setInt(2, serviceId);
+            st.executeUpdate();
+        } catch (Exception e) {
+            System.out.println("Lỗi cancelService: " + e.getMessage());
+        }
     }
 }
