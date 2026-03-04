@@ -192,3 +192,55 @@ tr:nth-child(even) {
     background: #ff4d4d;
     color: white;
 }
+
+.error-message{
+    color: red;
+    font-weight: bold;
+    margin-top: 10px;
+}
+
+.btn-back-service{
+    color: #ff4d4d;
+    background: none;
+    border: 1px solid #ff4d4d;
+    padding: 6px 14px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-weight: bold;
+    text-decoration: none;
+    display: inline-block;
+    margin-right: 10px;
+}
+
+.btn-back-service:hover{
+    background: #ff4d4d;
+    color: white;
+}
+
+form button,
+form a{
+    margin-top:10px;
+}
+
+.pagination{
+    margin-top:15px;
+    text-align:center;
+}
+
+.pagination a{
+    border:1px solid #355872;
+    padding:5px 10px;
+    margin:0 5px;
+    text-decoration:none;
+    color:#355872;
+    border-radius:4px;
+}
+
+.pagination a:hover{
+    background:#355872;
+    color:white;
+}
+
+.pagination span{
+    font-weight:bold;
+}

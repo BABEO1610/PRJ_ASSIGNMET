@@ -93,6 +93,20 @@
                                 </c:forEach>
 
                             </table>
+
+                            <div class="pagination">
+
+                                <c:if test="${currentPage > 1}">
+                                    <a href="Services?page=${currentPage-1}"><</a>
+                                </c:if>
+
+                                <span>Trang ${currentPage} / ${totalPages}</span>
+
+                                <c:if test="${currentPage < totalPages}">
+                                    <a href="Services?page=${currentPage+1}">></a>
+                                </c:if>
+
+                            </div>
                         </c:otherwise>
                     </c:choose>
 

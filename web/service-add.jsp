@@ -12,7 +12,7 @@
     <head>
         <meta charset="UTF-8">
         <title>Thêm dịch vụ</title>
-        <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/services.css">
+        <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/services.css?v=2">
     </head>
     <body>
 
@@ -53,7 +53,7 @@
 
                     <h3>Chọn dịch vụ muốn đăng ký</h3>
 
-                    <form method="post" action="Services">
+                    <form method="post" action="Services" onsubmit="return validateService()">
                         <input type="hidden" name="action" value="register"/>
 
                         <table>
@@ -79,16 +79,59 @@
 
                         </table>
 
+                        <div class="pagination">
+
+                            <c:if test="${currentPage > 1}">
+                                <a href="Services?action=add&page=${currentPage-1}">◀</a>
+                            </c:if>
+
+                            <span>Trang ${currentPage} / ${totalPages}</span>
+
+                            <c:if test="${currentPage < totalPages}">
+                                <a href="Services?action=add&page=${currentPage+1}">▶</a>
+                            </c:if>
+
+                        </div>
+
+                        <p id="errorMsg" class="error-message"></p>
+
                         <br/>
+
+                        <a href="Services" class="btn-back-service">
+                            Quay lại
+                        </a>
+
                         <button type="submit" class="btn-add-service">
                             Thêm dịch vụ
                         </button>
+
                     </form>
 
                 </div>
             </div>
 
         </div>
+        <script>
+            function validateService() {
 
+                const checkboxes = document.querySelectorAll("input[name='serviceIds']");
+                const error = document.getElementById("errorMsg");
+
+                let checked = false;
+
+                checkboxes.forEach(cb => {
+                    if (cb.checked) {
+                        checked = true;
+                    }
+                });
+
+                if (!checked) {
+                    error.innerText = "Chưa chọn dịch vụ nào để thêm!!";
+                    return false;
+                }
+
+                return true;
+            }
+        </script>
     </body>
 </html>

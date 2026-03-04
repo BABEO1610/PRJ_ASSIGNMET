@@ -13,6 +13,8 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
+import java.util.List;
+import model.ServiceTypes;
 import model.Users;
 
 /**
@@ -73,13 +75,48 @@ public class Services extends HttpServlet {
         String action = request.getParameter("action");
 
         if ("add".equals(action)) {
-            request.setAttribute("allServices",dao.getAvailableServices(user.getUserId()));
+            int page = 1;
+            int pageSize = 10;
+
+            String pageParam = request.getParameter("page");
+            if (pageParam != null) {
+                page = Integer.parseInt(pageParam);
+            }
+
+            int total = dao.countAvailableServices(user.getUserId());
+            int totalPages = (int) Math.ceil((double) total / pageSize);
+
+            request.setAttribute("currentPage", page);
+            request.setAttribute("totalPages", totalPages);
+
+            request.setAttribute("allServices",
+                    dao.getAvailableServicesPaging(user.getUserId(), page, pageSize));
             request.getRequestDispatcher("service-add.jsp").forward(request, response);
             return;
         }
 
-        request.setAttribute("myServices",
-                dao.getServicesByResidentId(user.getUserId()));
+        int page = 1;
+        int pageSize = 10;
+
+        String pageParam = request.getParameter("page");
+        if (pageParam != null) {
+            page = Integer.parseInt(pageParam);
+        }
+
+        List<ServiceTypes> myServices
+                = dao.getServicesByResidentId(user.getUserId());
+
+        int total = myServices.size();
+        int totalPages = (int) Math.ceil((double) total / pageSize);
+
+        int start = (page - 1) * pageSize;
+        int end = Math.min(start + pageSize, total);
+
+        List<ServiceTypes> pageList = myServices.subList(start, end);
+
+        request.setAttribute("myServices", pageList);
+        request.setAttribute("currentPage", page);
+        request.setAttribute("totalPages", totalPages);
 
         request.getRequestDispatcher("services.jsp").forward(request, response);
     }

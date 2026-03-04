@@ -507,4 +507,66 @@ public class UserDAO extends DBContext {
             System.out.println("Lỗi cancelService: " + e.getMessage());
         }
     }
+
+    public List<ServiceTypes> getAvailableServicesPaging(int residentId, int page, int pageSize) {
+
+        List<ServiceTypes> list = new ArrayList<>();
+
+        int offset = (page - 1) * pageSize;
+
+        String sql = "SELECT * FROM ServiceTypes st "
+                + "WHERE NOT EXISTS ( "
+                + " SELECT 1 FROM ResidentServices rs "
+                + " WHERE rs.ServiceTypeId = st.ServiceTypeId "
+                + " AND rs.ResidentId = ? AND rs.IsActive = 1 ) "
+                + "ORDER BY st.ServiceTypeId "
+                + "OFFSET ? ROWS FETCH NEXT ? ROWS ONLY";
+
+        try {
+            PreparedStatement st = connection.prepareStatement(sql);
+            st.setInt(1, residentId);
+            st.setInt(2, offset);
+            st.setInt(3, pageSize);
+
+            ResultSet rs = st.executeQuery();
+
+            while (rs.next()) {
+                ServiceTypes s = new ServiceTypes();
+                s.setServiceTypeId(rs.getInt("ServiceTypeId"));
+                s.setServiceName(rs.getString("ServiceName"));
+                s.setUnit(rs.getString("Unit"));
+                s.setPricePerUnit(rs.getDouble("PricePerUnit"));
+                list.add(s);
+            }
+
+        } catch (Exception e) {
+            System.out.println(e);
+        }
+
+        return list;
+    }
+
+    public int countAvailableServices(int residentId) {
+
+        String sql = "SELECT COUNT(*) FROM ServiceTypes st "
+                + "WHERE NOT EXISTS ( "
+                + " SELECT 1 FROM ResidentServices rs "
+                + " WHERE rs.ServiceTypeId = st.ServiceTypeId "
+                + " AND rs.ResidentId = ? AND rs.IsActive = 1 )";
+
+        try {
+            PreparedStatement st = connection.prepareStatement(sql);
+            st.setInt(1, residentId);
+            ResultSet rs = st.executeQuery();
+
+            if (rs.next()) {
+                return rs.getInt(1);
+            }
+
+        } catch (Exception e) {
+            System.out.println(e);
+        }
+
+        return 0;
+    }
 }
