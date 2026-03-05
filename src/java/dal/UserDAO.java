@@ -115,6 +115,7 @@ public class UserDAO extends DBContext {
                 n.setContent(rs.getString("Content"));
                 n.setType(rs.getString("Type"));
                 n.setSenderID(rs.getInt("SenderId"));
+                n.setSenderName(rs.getString("SenderName"));
                 n.setReceiverID(rs.getInt("ReceiverId"));
                 n.setApartmentID(rs.getInt("ApartmentId"));
                 n.setIsRead(rs.getBoolean("IsRead"));
