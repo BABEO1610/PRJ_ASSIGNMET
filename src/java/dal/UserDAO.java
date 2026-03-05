@@ -339,15 +339,15 @@ public class UserDAO extends DBContext {
         }
         return list;
     }
-    
+
     public List<Requests> getRequestsByResidentId(int residentId) {
         List<Requests> list = new ArrayList<>();
         // Lọc theo ResidentId của người đang đăng nhập
-        String sql = "SELECT r.*, u.FullName AS ResidentName " +
-                     "FROM Requests r " +
-                     "LEFT JOIN Users u ON r.ResidentId = u.UserId " +
-                     "WHERE r.ResidentId = ? " +
-                     "ORDER BY r.CreatedAt DESC";
+        String sql = "SELECT r.*, u.FullName AS ResidentName "
+                + "FROM Requests r "
+                + "LEFT JOIN Users u ON r.ResidentId = u.UserId "
+                + "WHERE r.ResidentId = ? "
+                + "ORDER BY r.CreatedAt DESC";
         try {
             PreparedStatement st = connection.prepareStatement(sql);
             st.setInt(1, residentId); // Truyền ID vào câu SQL
@@ -371,7 +371,7 @@ public class UserDAO extends DBContext {
         }
         return list;
     }
-    
+
     public int getRoleIDByuserID(int userId) {
         int roleId = -1; // Đặt giá trị mặc định là -1 (nghĩa là không tìm thấy)
 
@@ -394,5 +394,31 @@ public class UserDAO extends DBContext {
         }
 
         return roleId; // Trả về roleId (hoặc -1 nếu lỗi/không tồn tại)
+    }
+
+    public int getApartmentIdByUser(int userId) {
+
+        String sql = """
+        SELECT ApartmentId
+        FROM ApartmentResidents
+        WHERE UserId = ?
+        AND IsActive = 1
+    """;
+
+        try (PreparedStatement ps = connection.prepareStatement(sql)) {
+
+            ps.setInt(1, userId);
+
+            ResultSet rs = ps.executeQuery();
+
+            if (rs.next()) {
+                return rs.getInt("ApartmentId");
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return -1;
     }
 }
