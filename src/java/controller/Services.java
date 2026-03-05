@@ -5,6 +5,7 @@
 package controller;
 
 import dal.UserDAO;
+import dal.ServicesDAO;
 import java.io.IOException;
 import java.io.PrintWriter;
 import jakarta.servlet.ServletException;
@@ -71,7 +72,7 @@ public class Services extends HttpServlet {
             return;
         }
 
-        UserDAO dao = new UserDAO();
+        ServicesDAO dao = new ServicesDAO();
         String action = request.getParameter("action");
 
         if ("add".equals(action)) {
@@ -135,7 +136,7 @@ public class Services extends HttpServlet {
 
         HttpSession session = request.getSession();
         Users user = (Users) session.getAttribute("USER_INFO");
-        UserDAO dao = new UserDAO();
+        ServicesDAO dao = new ServicesDAO();
 
         String action = request.getParameter("action");
 
