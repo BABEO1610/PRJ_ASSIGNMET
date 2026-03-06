@@ -23,14 +23,13 @@
             </div>
             <h4>Tên: ${sessionScope.USER_INFO.fullName}</h4>
         </div>
-        <div class="nav-menu">
-            <a href="Home" class="menu-item">Trang chủ</a>
-            <a href="Apartments" class="menu-item">Quản lý căn hộ</a>
-            <a href="employees" class="menu-item active">Quản lý nhân viên</a>
-            <a href="Requests" class="menu-item">Quản lý yêu cầu</a>
-            <a href="Notifications" class="menu-item">Thông báo</a>
-            <a href="Logout" class="menu-item" style="margin-top: 20px;">Đăng xuất</a>
-        </div>
+        
+        <a href="Home" class="menu-item ">Trang chủ</a>
+        <a href="Apartments" class="menu-item">Quản lý căn hộ</a>
+        <a href="employees" class="menu-item active">Quản lý nhân viên</a>
+        <a href="Requests" class="menu-item">Quản lý yêu cầu cư dân</a>
+        <a href="Notifications" class="menu-item">Thông báo</a>
+        <a href="Logout" class="menu-item" style="margin-top: 20px;">Đăng xuất</a>
     </div>
 
     <div class="main-content">

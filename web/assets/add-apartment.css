@@ -1,0 +1,177 @@
+/* Bảng màu chủ đạo: F7F8F0, 9CD5FF, 7AAACE, 355872 */
+:root {
+    --bg-light: #F7F8F0;    /* Nền sidebar & table header */
+    --blue-hover: #9CD5FF;  /* Màu khi di chuột */
+    --blue-active: #7AAACE; /* Màu mục đang chọn */
+    --blue-dark: #355872;   /* Màu banner & tiêu đề chính */
+    --white: #ffffff;
+    --border-color: #dcdcdc;
+}
+
+body { 
+    font-family: 'Segoe UI', Arial, sans-serif; 
+    margin: 0; 
+    padding: 0; 
+    background-color: #ffffff; 
+    color: #355872; 
+}
+
+/* Top Bar */
+.top-bar { 
+    background-color: #355872; 
+    color: #F7F8F0; 
+    padding: 10px 20px; 
+    font-size: 14px; 
+    height: 40px; 
+    display: flex; 
+    align-items: center; 
+}
+
+/* Layout Container */
+.app-container { 
+    display: flex; 
+    min-height: calc(100vh - 50px); 
+}
+
+/* Sidebar */
+.sidebar { 
+    width: 250px; 
+    background-color: #F7F8F0; 
+    border-right: 2px solid #9CD5FF; 
+    display: flex; 
+    flex-direction: column; 
+}
+
+.user-profile { 
+    padding: 40px 20px; 
+    text-align: center; 
+}
+
+.avatar-circle { 
+    width: 100px; 
+    height: 100px; 
+    background-color: #c0c0c0; 
+    border-radius: 50%; 
+    margin: 0 auto 15px; 
+    display: flex; 
+    align-items: center; 
+    justify-content: center; 
+    color: white; 
+}
+
+.user-profile h4 { 
+    margin: 0; 
+    font-weight: bold; 
+    color: #355872; 
+}
+
+/* Menu Items */
+.menu-item { 
+    display: block; 
+    padding: 15px 20px; 
+    background-color: #9CD5FF; 
+    color: #355872; 
+    text-decoration: none; 
+    font-weight: bold; 
+    font-size: 16px; 
+    margin-bottom: 5px; 
+    transition: background-color 0.2s; 
+}
+
+.menu-item:hover, .menu-item.active { 
+    background-color: #7AAACE; 
+    color: #F7F8F0; 
+}
+
+/* --- PHẦN NỘI DUNG CHÍNH (Đẩy ra giữa) --- */
+.main-content {
+    flex: 1; /* Chiếm toàn bộ phần còn lại bên phải */
+    display: flex;
+    flex-direction: column;
+    align-items: center; /* Căn giữa theo chiều ngang */
+    justify-content: center; /* Căn giữa theo chiều dọc */
+    padding: 40px;
+    background-color: #fcfcfc;
+}
+
+/* Tiêu đề bảng */
+.main-content h2 {
+    margin-bottom: 25px;
+    color: #355872;
+    font-size: 28px;
+    text-align: center;
+}
+
+/* Container của Form */
+.form-container {
+    width: 100%;
+    max-width: 550px; /* Độ rộng hợp lý cho form nhập liệu */
+    background: #F7F8F0;
+    padding: 40px;
+    border-radius: 15px;
+    box-shadow: 0 10px 25px rgba(53, 88, 114, 0.15); /* Đổ bóng chuyên nghiệp hơn */
+    border: 1px solid #9CD5FF;
+}
+
+.form-group { 
+    margin-bottom: 20px; 
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 8px;
+    color: #355872;
+    font-weight: bold;
+    font-size: 14px;
+}
+
+.form-group input, .form-group select {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid #7AAACE;
+    border-radius: 8px;
+    box-sizing: border-box;
+    outline: none;
+    font-size: 14px;
+    transition: 0.3s;
+}
+
+.form-group input:focus, .form-group select:focus { 
+    border-color: #355872; 
+    box-shadow: 0 0 8px rgba(156, 213, 255, 0.6); 
+}
+
+/* Nút bấm */
+.form-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 15px;
+    margin-top: 30px;
+}
+
+.btn {
+    padding: 10px 25px;
+    border-radius: 8px;
+    font-weight: bold;
+    cursor: pointer;
+    border: none;
+    transition: 0.3s;
+}
+
+.btn-save {
+    background-color: #355872;
+    color: #F7F8F0;
+}
+
+.btn-save:hover {
+    background-color: #7AAACE;
+}
+
+.btn-cancel {
+    background-color: #9CD5FF;
+    color: #355872;
+}
+
+.btn-cancel:hover {
+    background-color: #ccc;
+}
