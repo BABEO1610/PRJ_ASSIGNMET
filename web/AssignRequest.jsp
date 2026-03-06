@@ -53,6 +53,12 @@
                     </c:forEach>
                 </tbody>
             </table>
+            <div class="action-bar">
+                <button type="button" 
+                        onclick="window.location.href='${pageContext.request.contextPath}/Requests'">
+                    Quay lại &rarr;
+                </button>
+            </div>
 
         </div>
     </div>
