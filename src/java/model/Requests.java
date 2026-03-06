@@ -24,6 +24,7 @@ public class Requests {
     private Timestamp createdAt;
     private int approvedBy;
     private int assignedTo;
+    private String apartmentNumber;
     
     public Requests() {}
 
@@ -136,6 +137,14 @@ public class Requests {
 
     public void setAssignedTo(int assignedTo) {
         this.assignedTo = assignedTo;
+    }
+
+    public String getApartmentNumber() {
+        return apartmentNumber;
+    }
+
+    public void setApartmentNumber(String apartmentNumber) {
+        this.apartmentNumber = apartmentNumber;
     }
 
     
