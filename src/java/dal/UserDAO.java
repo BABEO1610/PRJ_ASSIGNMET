@@ -339,4 +339,60 @@ public class UserDAO extends DBContext {
         }
         return list;
     }
+    
+    public List<Requests> getRequestsByResidentId(int residentId) {
+        List<Requests> list = new ArrayList<>();
+        // Lọc theo ResidentId của người đang đăng nhập
+        String sql = "SELECT r.*, u.FullName AS ResidentName " +
+                     "FROM Requests r " +
+                     "LEFT JOIN Users u ON r.ResidentId = u.UserId " +
+                     "WHERE r.ResidentId = ? " +
+                     "ORDER BY r.CreatedAt DESC";
+        try {
+            PreparedStatement st = connection.prepareStatement(sql);
+            st.setInt(1, residentId); // Truyền ID vào câu SQL
+            ResultSet rs = st.executeQuery();
+            while (rs.next()) {
+                Requests r = new Requests();
+                r.setRequestId(rs.getInt("RequestId"));
+                r.setResidentID(rs.getInt("ResidentId"));
+                r.setRequestTypeID(rs.getInt("RequestTypeId"));
+                r.setTitle(rs.getString("Title"));
+                r.setStatus(rs.getString("Status"));
+                r.setResidentName(rs.getString("ResidentName"));
+
+                if (rs.getTimestamp("CreatedAt") != null) {
+                    r.setCreatedAt(rs.getTimestamp("CreatedAt"));
+                }
+                list.add(r);
+            }
+        } catch (SQLException e) {
+            System.out.println("Lỗi getRequestsByResidentId: " + e.getMessage());
+        }
+        return list;
+    }
+    
+    public int getRoleIDByuserID(int userId) {
+        int roleId = -1; // Đặt giá trị mặc định là -1 (nghĩa là không tìm thấy)
+
+        // Câu lệnh SQL lấy RoleId từ bảng Users dựa trên UserId
+        String sql = "SELECT RoleId FROM Users WHERE UserId = ?";
+
+        try {
+            // connection là đối tượng Connection đã được khởi tạo trong lớp DAO của bạn
+            PreparedStatement st = connection.prepareStatement(sql);
+            st.setInt(1, userId); // Truyền tham số userId vào dấu ?
+
+            ResultSet rs = st.executeQuery();
+
+            // Nếu tìm thấy kết quả, lấy giá trị cột RoleId gán vào biến
+            if (rs.next()) {
+                roleId = rs.getInt("RoleId");
+            }
+        } catch (SQLException e) {
+            System.out.println("Lỗi tại getRoleIDByuserID: " + e.getMessage());
+        }
+
+        return roleId; // Trả về roleId (hoặc -1 nếu lỗi/không tồn tại)
+    }
 }

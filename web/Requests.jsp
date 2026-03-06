@@ -35,7 +35,7 @@
     </div>
 
     <div class="main-content">
-        <div class="banner">Quản lý yêu cầu cư dân</div>
+
         
         <div class="content-section">
 
@@ -94,7 +94,7 @@
 </div>
 
 <script>
-    const ROWS_PER_PAGE = 10;
+    const ROWS_PER_PAGE = 14;
     let currentPage = 1;
 
     function renderTable() {

@@ -153,12 +153,22 @@ button {
     background-color: #355872;
     color: #F7F8F0;
     border: none;
-    padding: 6px 12px;
+    padding: 8px 16px;
     border-radius: 4px;
     cursor: pointer;
     font-weight: bold;
+    transition: all 0.2s ease;
 }
 
 button:hover {
     background-color: #7AAACE;
+    transform: translateY(-2px);
+}
+
+.action-bar {
+    margin-top: 20px;       /* Khoảng cách nhỏ giữa bảng và nút */
+    display: flex;
+    justify-content: flex-end; /* Đẩy nội dung sang bên phải */
+    padding-right: 5px;     /* Chỉnh nhẹ để không dính sát mép phải màn hình */
+    width: 100%;
 }
