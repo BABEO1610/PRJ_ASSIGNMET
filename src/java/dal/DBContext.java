@@ -39,4 +39,17 @@ public class DBContext {
             Logger.getLogger(DBContext.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
+    
+    public Connection getConnection() {
+        try {
+            String url = "jdbc:sqlserver://localhost:1433;databaseName=PRJ_ASSIGNMET";
+            String user = "sa";
+            String pass = "123";
+            Class.forName("com.microsoft.sqlserver.jdbc.SQLServerDriver");
+            return DriverManager.getConnection(url, user, pass);
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+        return null;
+    }
 }
