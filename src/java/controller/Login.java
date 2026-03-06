@@ -45,7 +45,11 @@ public class Login extends HttpServlet {
             session.setAttribute("USER_INFO", account);
             
             // Chuyển hướng sang trang chủ
-            response.sendRedirect("Home"); 
+            int roleID = dao.getRoleIDByuserID(account.getUserId());
+            if(roleID == 1) response.sendRedirect("Home_Admin");
+            else if(roleID == 2) response.sendRedirect("Home");
+            else if(roleID == 3) response.sendRedirect("Home_Staffs");
+            else if(roleID == 4) response.sendRedirect("Home_Residents");
         } else {
             // Đăng nhập THẤT BẠI: Nhét câu chửi/thông báo lỗi vào hộp (Request) và ném lại trang cũ
             request.setAttribute("ERROR_MSG", "Sai tên đăng nhập hoặc mật khẩu!");
