@@ -15,6 +15,7 @@ import model.Apartments;
 import model.Notifications;
 import model.Positions;
 import model.Requests;
+import model.ServiceTypes;
 import model.StaffProfiles;
 
 public class UserDAO extends DBContext {
@@ -340,15 +341,15 @@ public class UserDAO extends DBContext {
         }
         return list;
     }
-    
+
     public List<Requests> getRequestsByResidentId(int residentId) {
         List<Requests> list = new ArrayList<>();
         // Lọc theo ResidentId của người đang đăng nhập
-        String sql = "SELECT r.*, u.FullName AS ResidentName " +
-                     "FROM Requests r " +
-                     "LEFT JOIN Users u ON r.ResidentId = u.UserId " +
-                     "WHERE r.ResidentId = ? " +
-                     "ORDER BY r.CreatedAt DESC";
+        String sql = "SELECT r.*, u.FullName AS ResidentName "
+                + "FROM Requests r "
+                + "LEFT JOIN Users u ON r.ResidentId = u.UserId "
+                + "WHERE r.ResidentId = ? "
+                + "ORDER BY r.CreatedAt DESC";
         try {
             PreparedStatement st = connection.prepareStatement(sql);
             st.setInt(1, residentId); // Truyền ID vào câu SQL
@@ -372,7 +373,7 @@ public class UserDAO extends DBContext {
         }
         return list;
     }
-    
+
     public int getRoleIDByuserID(int userId) {
         int roleId = -1; // Đặt giá trị mặc định là -1 (nghĩa là không tìm thấy)
 
