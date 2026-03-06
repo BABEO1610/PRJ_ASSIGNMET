@@ -6,7 +6,7 @@
     <meta charset="UTF-8">
     <title>Thêm căn hộ mới</title>
     <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/assets/add-apartment.css">
-
+    <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/assets/home.css">
 </head>
 <body>
 
@@ -21,11 +21,13 @@
             </div>
             <h4>Tên: ${sessionScope.USER_INFO.fullName}</h4>
         </div>
-        <a href="Home" class="menu-item">Trang chủ</a>
-        <a href="Apartments" class="menu-item active">Quản lý căn hộ</a>
-        <a href="Employees" class="menu-item">Quản lý nhân viên</a>
+        
+        <a href="Home" class="menu-item active">Trang chủ</a>
+        <a href="Apartments" class="menu-item">Quản lý căn hộ</a>
+        <a href="employees" class="menu-item">Quản lý nhân viên</a>
         <a href="Requests" class="menu-item">Quản lý yêu cầu cư dân</a>
-        <a href="Logout" class="menu-item" style="margin-top: auto;">Đăng xuất</a>
+        <a href="Notifications" class="menu-item">Thông báo</a>
+        <a href="Logout" class="menu-item" style="margin-top: 20px;">Đăng xuất</a>
     </div>
 
     <div class="main-content">

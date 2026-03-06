@@ -398,6 +398,32 @@ public class UserDAO extends DBContext {
         return roleId; // Trả về roleId (hoặc -1 nếu lỗi/không tồn tại)
     }
     
+    public int getApartmentIdByUser(int userId) {
+
+        String sql = """
+        SELECT ApartmentId
+        FROM ApartmentResidents
+        WHERE UserId = ?
+        AND IsActive = 1
+    """;
+
+        try (PreparedStatement ps = connection.prepareStatement(sql)) {
+
+            ps.setInt(1, userId);
+
+            ResultSet rs = ps.executeQuery();
+
+            if (rs.next()) {
+                return rs.getInt("ApartmentId");
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return -1;
+    }
+    
     public List<Apartments> getAllApartments() {
     List<Apartments> list = new ArrayList<>();
     // SQL: Lấy thông tin căn hộ + Lấy FullName từ bảng Users gán cho OwnerName
@@ -543,5 +569,4 @@ public class UserDAO extends DBContext {
     }
     return null;
 }
-    
 }

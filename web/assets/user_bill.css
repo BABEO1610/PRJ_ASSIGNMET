@@ -1,0 +1,94 @@
+/*
+Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+Click nbfs://nbhost/SystemFileSystem/Templates/ClientSide/css.css to edit this template
+*/
+/* 
+    Created on : Mar 3, 2026, 5:12:08 PM
+    Author     : ADMIN
+*/
+.container {
+    display: flex;
+}
+
+.sidebar {
+    width: 220px;
+    background: #7fa2be;
+    color: white;
+    min-height: 100vh;
+}
+
+.profile {
+    text-align: center;
+    padding: 20px;
+    background: #6d91ae;
+}
+
+.menu {
+    list-style: none;
+    padding: 0;
+}
+
+.menu li {
+    padding: 15px;
+}
+
+.menu li a {
+    text-decoration: none;
+    color: white;
+    display: block;
+}
+
+.menu li:hover,
+.menu .active {
+    background: #5c839f;
+}
+
+.main-content {
+    flex: 1;
+    background: #f4f6f9;
+}
+
+.header-banner {
+    background: linear-gradient(to right, #7c9cb6, #a7bacb);
+    padding: 50px;
+    text-align: center;
+    font-size: 28px;
+    color: white;
+    font-weight: bold;
+}
+
+.content {
+    padding: 30px;
+}
+
+.table-style {
+    width: 100%;
+    border-collapse: collapse;
+    background: white;
+}
+
+.table-style th {
+    background: #e5edf4;
+    padding: 12px;
+    border-bottom: 2px solid #c5d3df;
+}
+
+.table-style td {
+    padding: 12px;
+    border-bottom: 1px solid #ddd;
+}
+
+.btn-pay {
+    margin-top: 15px;
+    padding: 10px 20px;
+    background: #28a745;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.btn-pay:hover {
+    background: #218838;
+}
