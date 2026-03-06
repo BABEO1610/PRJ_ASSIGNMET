@@ -4,6 +4,12 @@
  */
 package model;
 
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  *
  * @author ADMIN
@@ -15,19 +21,28 @@ public class Apartments {
     private double area;
     private String types;
     private String status;
-    private Users owner;
+    private int ownerId;    // Sửa từ User thành int theo yêu cầu
+    private String ownerName; // Thêm trường này để nhận dữ liệu từ JOIN
+
+    // Constructor, Getter và Setter cho các trường trên...
+    public int getOwnerId() { return ownerId; }
+    public void setOwnerId(int ownerId) { this.ownerId = ownerId; }
+    
+    public String getOwnerName() { return ownerName; }
+    public void setOwnerName(String ownerName) { this.ownerName = ownerName; }
 
     public Apartments() {}
 
     public Apartments(int apartmentId, String apartmentNumber, int floor, double area, 
-                      String types, String status, Users owner) {
+                      String types, String status, int ownerId, String ownerName) {
         this.apartmentId = apartmentId;
         this.apartmentNumber = apartmentNumber;
         this.floor = floor;
         this.area = area;
         this.types = types;
         this.status = status;
-        this.owner = owner;
+        this.ownerId = ownerId;
+        this.ownerName = ownerName;
     }
 
     public int getApartmentId() { return apartmentId; }
@@ -47,7 +62,4 @@ public class Apartments {
 
     public String getStatus() { return status; }
     public void setStatus(String status) { this.status = status; }
-
-    public Users getOwner() { return owner; }
-    public void setOwner(Users owner) { this.owner = owner; }
 }
