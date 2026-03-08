@@ -9,26 +9,36 @@ import model.RequestTypes;
 
 public class RequestsDAO extends DBContext {
 
-// Trong RequestsDAO.java
-    public List<model.Requests> getAllRequests() {
-        List<model.Requests> list = new ArrayList<>();
-        // SQL JOIN để lấy đầy đủ tên cư dân và số phòng
-        String sql = "SELECT r.*, u.FullName, a.ApartmentNumber " +
-                     "FROM Requests r " +
-                     "JOIN Users u ON r.ResidentId = u.UserId " +
-                     "JOIN Apartments a ON r.ApartmentId = a.ApartmentId " +
-                     "ORDER BY CASE WHEN r.Status = 'Pending' THEN 0 ELSE 1 END, " +
-                     "r.CreatedAt DESC";
+    public List<Requests> getAllRequests() {
+
+        List<Requests> list = new ArrayList<>();
+
+        String sql = """
+        SELECT r.*, u.FullName, a.ApartmentNumber
+        FROM Requests r
+        JOIN Users u ON r.ResidentId = u.UserId
+        JOIN Apartments a ON r.ApartmentId = a.ApartmentId
+        ORDER BY 
+        CASE 
+            WHEN r.Status = 'Pending' THEN 0
+            WHEN r.Status = 'Cancelled' THEN 1
+            ELSE 2
+        END,
+        r.CreatedAt DESC
+    """;
+
         try {
             PreparedStatement ps = connection.prepareStatement(sql);
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
-                model.Requests req = new model.Requests();
+
+                Requests req = new Requests();
+
                 req.setRequestId(rs.getInt("RequestId"));
                 req.setResidentID(rs.getInt("ResidentId"));
-                req.setResidentName(rs.getString("FullName")); // Lấy từ bảng Users
+                req.setResidentName(rs.getString("FullName"));
                 req.setApartmentID(rs.getInt("ApartmentId"));
-                req.setApartmentNumber(rs.getString("ApartmentNumber")); // Lấy từ bảng Apartments
+                req.setApartmentNumber(rs.getString("ApartmentNumber"));
                 req.setRequestTypeID(rs.getInt("RequestTypeId"));
                 req.setTitle(rs.getString("Title"));
                 req.setDescription(rs.getString("Description"));
@@ -44,6 +54,7 @@ public class RequestsDAO extends DBContext {
         }
         return list;
     }
+
     public void assignRequest(int requestId, int staffId, int managerId) {
         String sql = """
             UPDATE Requests
@@ -62,6 +73,7 @@ public class RequestsDAO extends DBContext {
             e.printStackTrace();
         }
     }
+
     public int getApartmentIdByOwner(int userId) {
         String sql = "SELECT ApartmentId FROM Apartments WHERE OwnerId = ?";
         try {
@@ -106,6 +118,7 @@ public class RequestsDAO extends DBContext {
             e.printStackTrace();
         }
     }
+
     public List<RequestTypes> getAllRequestTypes() {
         List<RequestTypes> list = new ArrayList<>();
         // Câu lệnh SQL lấy dữ liệu từ bảng RequestTypes như trong ảnh database của bạn
@@ -128,5 +141,160 @@ public class RequestsDAO extends DBContext {
             System.out.println("Error at getAllRequestTypes: " + e.getMessage());
         }
         return list;
+    }
+
+    public List<Requests> getTasksByStaff(int staffId) {
+        List<Requests> list = new ArrayList<>();
+
+        String sql = """
+            SELECT r.*, u.FullName, a.ApartmentNumber
+            FROM Requests r
+            JOIN Users u ON r.ResidentId = u.UserId
+            JOIN Apartments a ON r.ApartmentId = a.ApartmentId
+            WHERE r.AssignedTo = ?
+            ORDER BY r.CreatedAt DESC
+        """;
+
+        try {
+            PreparedStatement ps = connection.prepareStatement(sql);
+            ps.setInt(1, staffId);
+            ResultSet rs = ps.executeQuery();
+
+            while (rs.next()) {
+
+                Requests r = new Requests();
+
+                r.setRequestId(rs.getInt("RequestId"));
+                r.setResidentID(rs.getInt("ResidentId"));
+                r.setResidentName(rs.getString("FullName"));
+                r.setApartmentID(rs.getInt("ApartmentId"));
+                r.setApartmentNumber(rs.getString("ApartmentNumber"));
+                r.setTitle(rs.getString("Title"));
+                r.setDescription(rs.getString("Description"));
+                r.setStatus(rs.getString("Status"));
+                r.setCreatedAt(rs.getTimestamp("CreatedAt"));
+
+                list.add(r);
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return list;
+    }
+
+    public Requests getRequestById(int id) {
+        String sql = """
+            SELECT r.*, u.FullName, a.ApartmentNumber
+            FROM Requests r
+            JOIN Users u ON r.ResidentId = u.UserId
+            JOIN Apartments a ON r.ApartmentId = a.ApartmentId
+            WHERE r.RequestId = ?
+        """;
+
+        try {
+
+            PreparedStatement ps = connection.prepareStatement(sql);
+            ps.setInt(1, id);
+
+            ResultSet rs = ps.executeQuery();
+
+            if (rs.next()) {
+
+                Requests r = new Requests();
+
+                r.setRequestId(rs.getInt("RequestId"));
+                r.setResidentName(rs.getString("FullName"));
+                r.setApartmentNumber(rs.getString("ApartmentNumber"));
+                r.setTitle(rs.getString("Title"));
+                r.setDescription(rs.getString("Description"));
+                r.setStatus(rs.getString("Status"));
+
+                return r;
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return null;
+    }
+
+    public void startTask(int requestId) {
+
+        String sql = """
+        UPDATE Requests
+        SET Status = 'Processing'
+        WHERE RequestId = ?
+    """;
+
+        try {
+
+            PreparedStatement ps = connection.prepareStatement(sql);
+            ps.setInt(1, requestId);
+            ps.executeUpdate();
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void completeTask(int requestId) {
+
+        String sql = """
+        UPDATE Requests
+        SET Status = 'Completed'
+        WHERE RequestId = ?
+    """;
+
+        try {
+
+            PreparedStatement ps = connection.prepareStatement(sql);
+            ps.setInt(1, requestId);
+            ps.executeUpdate();
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void updateStatus(int requestId, String status) {
+
+        try {
+
+            PreparedStatement ps;
+
+            // Nếu Cancelled thì reset AssignedTo và ApprovedBy
+            if ("Cancelled".equalsIgnoreCase(status)) {
+
+                String sql = """
+                UPDATE Requests
+                SET Status = ?, 
+                    AssignedTo = NULL,
+                    ApprovedBy = NULL
+                WHERE RequestId = ?
+            """;
+
+                ps = connection.prepareStatement(sql);
+
+                ps.setString(1, status);
+                ps.setInt(2, requestId);
+
+            } else {
+
+                String sql = "UPDATE Requests SET Status = ? WHERE RequestId = ?";
+
+                ps = connection.prepareStatement(sql);
+
+                ps.setString(1, status);
+                ps.setInt(2, requestId);
+            }
+
+            ps.executeUpdate();
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 }

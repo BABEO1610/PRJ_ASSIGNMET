@@ -1,0 +1,99 @@
+/* MAIN CONTENT */
+
+.main-content {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    padding: 20px 40px;
+    gap: 30px; /* khoảng cách giữa 2 bảng */
+}
+
+/* SECTION */
+
+.content-section {
+    flex: 1; /* chia đều chiều cao */
+    display: flex;
+    flex-direction: column;
+}
+
+/* ===== Section Header ===== */
+
+.section-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+    margin-top: 20px;
+}
+
+.section-header h3 {
+    margin: 0;
+    font-weight: bold;
+    color: #355872;
+}
+
+/* ===== Pagination ===== */
+
+.pagination-controls button {
+    background-color: #355872;
+    color: #F7F8F0;
+    border: none;
+    padding: 5px 15px;
+    margin-left: 5px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-weight: bold;
+}
+
+.pagination-controls button:hover {
+    background-color: #7AAACE;
+}
+
+.pagination-controls span {
+    font-size: 14px;
+    margin: 0 10px;
+    font-weight: bold;
+}
+
+/* ===== Table ===== */
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 20px;
+    border-bottom: 2px solid #7AAACE;
+}
+
+th, td {
+    padding: 12px 15px;
+    text-align: left;
+    border-bottom: 1px solid #e0e0e0;
+}
+
+th {
+    background-color: #F7F8F0;
+    color: #355872;
+    font-weight: bold;
+    border-top: 1px solid #e0e0e0;
+    border-bottom: 2px solid #7AAACE;
+}
+
+tr:nth-child(even) {
+    background-color: #fcfcfc;
+}
+
+/* ===== Button ===== */
+
+.btn-primary {
+    background-color: #355872;
+    color: #F7F8F0;
+    border: none;
+    padding: 6px 14px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-weight: bold;
+}
+
+.btn-primary:hover {
+    background-color: #7AAACE;
+}
