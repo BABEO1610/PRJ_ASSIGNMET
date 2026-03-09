@@ -1,0 +1,115 @@
+.top-bar {
+    background-color: #355872;
+    color: #ffffff;
+    padding: 12px 30px;
+    font-weight: bold;
+    font-size: 16px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+}
+
+/* --- LAYOUT TRANG CHỈNH SỬA (KHÔNG SIDEBAR) --- */
+.main-content-centered {
+    display: flex;
+    justify-content: center; /* Căn giữa ngang */
+    align-items: center;     /* Căn giữa dọc */
+    min-height: calc(100vh - 45px); /* Trừ chiều cao của top-bar */
+    padding: 20px;
+    background-color: #ffffff; /* Nền trắng để nổi bật Card */
+}
+
+/* --- CARD CHỨA FORM --- */
+.form-container {
+    width: 100%;
+    max-width: 500px; /* Độ rộng tối ưu cho form nhập liệu */
+    background-color: #F7F8F0; /* Màu nền beige chuyên nghiệp */
+    padding: 40px;
+    border-radius: 12px; /* Bo góc card theo yêu cầu */
+    box-shadow: 0 10px 25px rgba(53, 88, 114, 0.15); /* Đổ bóng tạo chiều sâu */
+    border: 1px solid #9CD5FF; /* Viền xanh nhạt đồng bộ */
+}
+
+.form-container h2 {
+    margin-top: 0;
+    margin-bottom: 25px;
+    color: #355872;
+    text-align: center;
+    font-size: 24px;
+    border-bottom: 2px solid #7AAACE; /* Gạch chân tiêu đề */
+    padding-bottom: 10px;
+}
+
+/* --- CÁC TRƯỜNG NHẬP LIỆU --- */
+.form-group {
+    margin-bottom: 20px;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 8px;
+    color: #355872;
+    font-weight: bold;
+    font-size: 14px;
+}
+
+.form-group input, 
+.form-group select {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid #7AAACE;
+    border-radius: 8px; /* Bo góc input chuẩn */
+    box-sizing: border-box;
+    font-size: 14px;
+    outline: none;
+    transition: 0.3s;
+}
+
+.form-group input:focus, 
+.form-group select:focus {
+    border-color: #355872;
+    box-shadow: 0 0 5px rgba(156, 213, 255, 0.5);
+}
+
+/* --- NÚT BẤM (BUTTONS) --- */
+.form-actions {
+    display: flex;
+    justify-content: flex-end; /* Đẩy các nút về bên phải Card */
+    gap: 15px;
+    margin-top: 30px;
+}
+
+.btn {
+    padding: 10px 25px;
+    border-radius: 8px; /* Bo góc nút theo phong cách ảnh 2 */
+    font-weight: bold;
+    cursor: pointer;
+    border: none;
+    transition: 0.3s;
+    color: white;
+}
+
+/* Nút Lưu: Xanh lá */
+.btn-edit {
+    background-color: #2ecc71;
+}
+.btn-edit:hover {
+    background-color: #27ae60;
+}
+
+/* Nút Hủy: Đỏ */
+.btn-delete {
+    background-color: #e74c3c;
+}
+.btn-delete:hover {
+    background-color: #c0392b;
+}
+
+/* Checkbox Alignment */
+.checkbox-group {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.checkbox-group input {
+    width: auto; /* Tránh checkbox bị giãn 100% */
+}
