@@ -1,0 +1,105 @@
+.top-bar {
+    background-color: #355872;
+    color: #ffffff;
+    padding: 12px 30px;
+    font-weight: bold;
+    font-size: 16px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+}
+
+/* --- PHONG CÁCH TỔNG THỂ (CĂN GIỮA TOÀN TRANG) --- */
+.main-content-centered {
+    flex: 1;
+    display: flex;
+    justify-content: center; /* Căn giữa theo chiều ngang */
+    align-items: center;     /* Căn giữa theo chiều dọc */
+    min-height: calc(100vh - 45px); /* Trừ đi chiều cao top-bar */
+    padding: 40px 20px;
+    background-color: #ffffff;
+}
+
+/* --- CARD CHỨA FORM --- */
+.form-container {
+    width: 100%;
+    max-width: 550px; /* Độ rộng vừa vặn để tập trung vào nội dung */
+    background-color: #F7F8F0; /* Nền kem beige đặc trưng */
+    padding: 35px 40px;
+    border-radius: 15px; /* Bo góc mềm mại giống ảnh 1 */
+    box-shadow: 0 10px 30px rgba(53, 88, 114, 0.15); /* Đổ bóng tạo chiều sâu */
+    border: 1px solid #9CD5FF; /* Viền xanh nhạt đồng bộ */
+}
+
+.form-container h2 {
+    margin-top: 0;
+    margin-bottom: 25px;
+    color: #355872;
+    text-align: center;
+    font-size: 24px;
+    border-bottom: 2px solid #7AAACE;
+    padding-bottom: 15px;
+}
+
+/* --- CẤU TRÚC CÁC Ô NHẬP LIỆU --- */
+.form-group {
+    margin-bottom: 20px;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 8px;
+    color: #355872;
+    font-weight: bold;
+    font-size: 14px;
+}
+
+.form-group input, 
+.form-group select {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid #7AAACE;
+    border-radius: 8px; /* Bo góc input như yêu cầu ở các trang trước */
+    box-sizing: border-box;
+    font-size: 14px;
+    outline: none;
+    transition: 0.3s;
+}
+
+.form-group input:focus, 
+.form-group select:focus {
+    border-color: #355872;
+    box-shadow: 0 0 8px rgba(156, 213, 255, 0.6);
+}
+
+/* --- NÚT BẤM HÀNH ĐỘNG --- */
+.form-actions {
+    display: flex;
+    justify-content: flex-end; /* Đẩy các nút về góc phải */
+    gap: 15px;
+    margin-top: 30px;
+}
+
+.btn {
+    padding: 10px 25px;
+    border: none;
+    border-radius: 8px; /* Bo góc nút chuẩn ảnh 2 */
+    font-weight: bold;
+    cursor: pointer;
+    transition: 0.3s;
+    color: white;
+}
+
+/* Nút Lưu: Xanh lá (Sửa) */
+.btn-save {
+    background-color: #2ecc71;
+}
+.btn-save:hover {
+    background-color: #27ae60;
+}
+
+/* Nút Hủy: Đỏ (Xóa) */
+.btn-cancel {
+    background-color: #e74c3c;
+}
+.btn-cancel:hover {
+    background-color: #c0392b;
+}
