@@ -42,7 +42,7 @@
                 
                 <div style="margin-top: 30px; text-align: center;">
                     <button class="btn btn-view" onclick="history.back()">Quay lại</button>
-                    <button class="btn btn-edit" onclick="window.location.href='EditApartment?id=${apartment.apartmentId}'">Sửa thông tin</button>
+                    <button class="btn btn-edit" onclick="window.location.href='EditApartmentController?id=${apartment.apartmentId}'">Sửa thông tin</button>
                 </div>
             </div>
         </div>

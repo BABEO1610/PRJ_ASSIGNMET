@@ -1,0 +1,143 @@
+/* Bảng màu chủ đạo: F7F8F0, 9CD5FF, 7AAACE, 355872 */
+
+body {
+    font-family: 'Segoe UI', Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #f4f7f9;
+    color: #355872;
+}
+
+/* --- TOP BAR (Thanh màu xanh đậm trên cùng) --- */
+.top-bar {
+    background-color: #355872;
+    color: #ffffff;
+    padding: 12px 30px;
+    font-weight: bold;
+    font-size: 16px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+}
+
+/* --- CONTAINER CHÍNH --- */
+.full-page-content {
+    display: flex;
+    justify-content: center;
+    padding: 40px 20px;
+}
+
+.data-container {
+    width: 100%;
+    max-width: 1200px;
+    background-color: #ffffff;
+    padding: 30px;
+    border-radius: 12px;
+    box-shadow: 0 8px 30px rgba(53, 88, 114, 0.1);
+    border: 1px solid #9CD5FF;
+}
+
+/* --- TIÊU ĐỀ & PHÂN TRANG --- */
+.section-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 25px;
+    border-bottom: 2px solid #355872;
+    padding-bottom: 15px;
+}
+
+.section-header h3 {
+    margin: 0;
+    font-size: 24px;
+}
+
+.pagination-controls {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.pagination-controls button {
+    background-color: #355872;
+    color: white;
+    border: none;
+    padding: 6px 15px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-weight: bold;
+    transition: 0.3s;
+}
+
+.pagination-controls button:hover {
+    background-color: #7AAACE;
+}
+
+/* --- BẢNG DỮ LIỆU --- */
+.data-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 20px;
+}
+
+.data-table th {
+    background-color: #F7F8F0;
+    color: #355872;
+    font-weight: bold;
+    text-align: left;
+    padding: 15px;
+    border-bottom: 2px solid #7AAACE;
+}
+
+.data-table td {
+    padding: 15px;
+    border-bottom: 1px solid #eee;
+    font-size: 14px;
+}
+
+.data-table tr:hover {
+    background-color: #f1faff;
+}
+
+/* --- NÚT BẤM (Bo góc & Màu sắc chuẩn ảnh 2) --- */
+.btn {
+    padding: 8px 20px;
+    border: none;
+    border-radius: 8px; /* Bo góc theo yêu cầu */
+    font-weight: bold;
+    cursor: pointer;
+    transition: 0.3s;
+    color: white;
+    font-size: 13px;
+}
+
+/* Sửa: Xanh lá */
+.btn-edit { background-color: #2ecc71; }
+.btn-edit:hover { background-color: #27ae60; }
+
+/* Xóa & Đăng xuất: Đỏ */
+.btn-delete, .btn-logout { background-color: #e74c3c; }
+.btn-delete:hover, .btn-logout:hover { background-color: #c0392b; }
+
+/* Thêm mới: Xanh dương đậm */
+.btn-main-add {
+    background-color: #355872;
+    padding: 12px 25px;
+}
+.btn-main-add:hover { background-color: #7AAACE; }
+
+/* --- FOOTER ACTIONS --- */
+.footer-actions {
+    display: flex;
+    justify-content: space-between; /* Đẩy Đăng xuất sang trái, Thêm mới sang phải */
+    align-items: center;
+    margin-top: 30px;
+}
+
+/* Badge trạng thái */
+.status-badge {
+    padding: 4px 10px;
+    border-radius: 20px;
+    font-weight: bold;
+    font-size: 12px;
+}
+.status-active { color: #2ecc71; }
+.status-locked { color: #e74c3c; }

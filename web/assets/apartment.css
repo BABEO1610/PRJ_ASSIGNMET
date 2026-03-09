@@ -138,3 +138,75 @@ tr:nth-child(even) { background-color: #fcfcfc; }
 }
 
 .info-item { margin-bottom: 15px; border-bottom: 1px solid #7AAACE; padding-bottom: 5px; }
+
+.section-header{ 
+    display: flex; 
+    justify-content: space-between; 
+    align-items: center; 
+    margin-bottom: 10px; 
+    margin-top: 20px; 
+}
+
+.pagination-controls button { 
+    background-color: #355872; 
+    color: #F7F8F0; 
+    border: none; 
+    padding: 5px 15px; 
+    margin-left: 5px; 
+    border-radius: 4px; 
+    cursor: pointer; 
+    font-weight: bold; 
+}
+
+.pagination-controls button:hover { 
+    background-color: #7AAACE; 
+}
+
+.pagination-controls span { 
+    font-size: 14px; 
+    margin: 0 10px; 
+    font-weight: bold; 
+}
+
+/* Style cho link mã số căn hộ */
+.apt-link {
+    text-decoration: none;
+    color: #355872; /* Màu xanh đậm chủ đạo */
+    font-weight: bold;
+    padding: 4px 8px;
+    border-radius: 4px;
+    transition: 0.3s;
+}
+
+.apt-link:hover {
+    background-color: #9CD5FF; /* Hiện nền xanh nhạt khi di chuột vào */
+    color: #355872;
+    text-decoration: underline;
+}
+
+/* Điều chỉnh lại độ rộng cột hành động sau khi bỏ 1 nút */
+.data-table th:last-child, 
+.data-table td:last-child {
+    width: 200px; /* Thu hẹp lại một chút vì chỉ còn 2 nút */
+}
+
+.pagination-controls button { 
+    background-color: #355872; 
+    color: #F7F8F0; 
+    border: none; 
+    padding: 5px 15px; 
+    margin-left: 5px; 
+    border-radius: 4px; 
+    cursor: pointer; 
+    font-weight: bold; 
+}
+
+.pagination-controls button:hover { 
+    background-color: #7AAACE; 
+}
+
+.pagination-controls span { 
+    font-size: 14px; 
+    margin: 0 10px; 
+    font-weight: bold; 
+}

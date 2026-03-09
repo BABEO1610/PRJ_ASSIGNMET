@@ -103,22 +103,27 @@ public class ServicesDAO extends DBContext {
         return 0;
     }
 
-    public void registerServices(int residentId, String[] serviceIds) {
+    public void registerServices(int residentId, int apartmentId, String[] serviceIds) {
 
-        String checkSql = "SELECT IsActive FROM ResidentServices "
-                + "WHERE ResidentId = ? AND ServiceTypeId = ?";
+        String checkSql = "SELECT IsActive FROM ResidentServices WHERE ResidentId=? AND ServiceTypeId=?";
+        String insertSql = "INSERT INTO ResidentServices (ResidentId, ServiceTypeId, RegisteredAt, IsActive) VALUES (?, ?, GETDATE(), 1)";
+        String updateSql = "UPDATE ResidentServices SET IsActive=1, RegisteredAt=GETDATE() WHERE ResidentId=? AND ServiceTypeId=?";
+        String priceSql = "SELECT PricePerUnit FROM ServiceTypes WHERE ServiceTypeId=?";
 
-        String insertSql = "INSERT INTO ResidentServices (ResidentId, ServiceTypeId, RegisteredAt, IsActive) "
-                + "VALUES (?, ?, GETDATE(), 1)";
-
-        String updateSql = "UPDATE ResidentServices SET IsActive = 1, RegisteredAt = GETDATE() "
-                + "WHERE ResidentId = ? AND ServiceTypeId = ?";
+        BillDAO billDAO = new BillDAO();
 
         try {
-
             for (String id : serviceIds) {
-
                 int serviceId = Integer.parseInt(id);
+
+                PreparedStatement priceSt = connection.prepareStatement(priceSql);
+                priceSt.setInt(1, serviceId);
+                ResultSet priceRs = priceSt.executeQuery();
+
+                double price = 0;
+                if (priceRs.next()) {
+                    price = priceRs.getDouble("PricePerUnit");
+                }
 
                 PreparedStatement checkSt = connection.prepareStatement(checkSql);
                 checkSt.setInt(1, residentId);
@@ -126,38 +131,49 @@ public class ServicesDAO extends DBContext {
                 ResultSet rs = checkSt.executeQuery();
 
                 if (rs.next()) {
-
                     PreparedStatement updateSt = connection.prepareStatement(updateSql);
                     updateSt.setInt(1, residentId);
                     updateSt.setInt(2, serviceId);
                     updateSt.executeUpdate();
-
                 } else {
-
                     PreparedStatement insertSt = connection.prepareStatement(insertSql);
                     insertSt.setInt(1, residentId);
                     insertSt.setInt(2, serviceId);
                     insertSt.executeUpdate();
                 }
-            }
 
+                // TẠO BILL RIÊNG VÀ LƯU LUÔN SERVICE ID VÀO BILL
+                billDAO.createBill(apartmentId, price, serviceId);
+            }
         } catch (Exception e) {
-            System.out.println("Lỗi registerServices: " + e.getMessage());
+            e.printStackTrace();
         }
     }
 
     public void cancelService(int residentId, int serviceId) {
 
-        String sql = "UPDATE ResidentServices SET IsActive = 0 "
-                + "WHERE ResidentId = ? AND ServiceTypeId = ?";
+        String deactivateService = """
+            UPDATE ResidentServices
+            SET IsActive = 0
+            WHERE ResidentId = ? AND ServiceTypeId = ?
+        """;
 
         try {
-            PreparedStatement st = connection.prepareStatement(sql);
-            st.setInt(1, residentId);
-            st.setInt(2, serviceId);
-            st.executeUpdate();
+            PreparedStatement st1 = connection.prepareStatement(deactivateService);
+            st1.setInt(1, residentId);
+            st1.setInt(2, serviceId);
+            st1.executeUpdate();
+
+            UserDAO userDAO = new UserDAO();
+            int apartmentId = userDAO.getApartmentIdByUser(residentId);
+
+            BillDAO billDAO = new BillDAO();
+
+            // Truyền cả serviceId để xóa chính xác
+            billDAO.deleteLatestBillByApartment(apartmentId, serviceId);
+
         } catch (Exception e) {
-            System.out.println("Lỗi cancelService: " + e.getMessage());
+            e.printStackTrace();
         }
     }
 }

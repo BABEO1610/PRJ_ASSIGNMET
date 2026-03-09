@@ -81,7 +81,7 @@ public class Users {
         this.phone = phone;
     }
 
-    public boolean isIsActive() {
+    public boolean getIsActive() {
         return isActive;
     }
 

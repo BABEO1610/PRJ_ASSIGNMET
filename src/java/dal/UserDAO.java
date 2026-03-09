@@ -570,4 +570,41 @@ public class UserDAO extends DBContext {
     }
     return null;
 }
+    public List<Requests> getRequestsByTenantId(int tenantId) {
+        List<Requests> list = new ArrayList<>();
+
+        // SQL JOIN 3 bảng: Requests, Users (lấy tên người gửi), Apartments (lấy tên phòng và lọc theo TenantId)
+        String sql = "SELECT r.*, u.FullName AS ResidentName, a.ApartmentNumber "
+                   + "FROM Requests r "
+                   + "LEFT JOIN Users u ON r.ResidentId = u.UserId "
+                   + "LEFT JOIN Apartments a ON r.ApartmentId = a.ApartmentId "
+                   + "WHERE a.TenantId = ? "
+                   + "ORDER BY r.CreatedAt DESC";
+
+        try {
+            PreparedStatement st = connection.prepareStatement(sql);
+            st.setInt(1, tenantId); // Truyền ID của Đại diện khách thuê (người đang đăng nhập)
+            ResultSet rs = st.executeQuery();
+
+            while (rs.next()) {
+                Requests r = new Requests();
+                r.setRequestId(rs.getInt("RequestId"));
+                r.setResidentID(rs.getInt("ResidentId"));
+                r.setApartmentID(rs.getInt("ApartmentId"));
+                r.setApartmentNumber(rs.getString("ApartmentNumber")); // Lấy Tên căn hộ
+                r.setRequestTypeID(rs.getInt("RequestTypeId"));
+                r.setTitle(rs.getString("Title"));
+                r.setStatus(rs.getString("Status"));
+                r.setResidentName(rs.getString("ResidentName"));
+
+                if (rs.getTimestamp("CreatedAt") != null) {
+                    r.setCreatedAt(rs.getTimestamp("CreatedAt"));
+                }
+                list.add(r);
+            }
+        } catch (SQLException e) {
+            System.out.println("Lỗi getRequestsByTenantId: " + e.getMessage());
+        }
+        return list;
+    }
 }

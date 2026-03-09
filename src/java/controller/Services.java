@@ -143,7 +143,10 @@ public class Services extends HttpServlet {
         if ("register".equals(action)) {
             String[] serviceIds = request.getParameterValues("serviceIds");
             if (serviceIds != null) {
-                dao.registerServices(user.getUserId(), serviceIds);
+                UserDAO userDAO = new UserDAO();
+                int apartmentId = userDAO.getApartmentIdByUser(user.getUserId());
+
+                dao.registerServices(user.getUserId(), apartmentId, serviceIds);
             }
         }
 
