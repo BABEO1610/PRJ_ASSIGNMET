@@ -50,6 +50,7 @@ public class Login extends HttpServlet {
             else if(roleID == 2) response.sendRedirect("Home");
             else if(roleID == 3) response.sendRedirect("Home_Staffs");
             else if(roleID == 4) response.sendRedirect("Home_Residents");
+            else if(roleID == 5) response.sendRedirect("Home_Tenant_representative");
         } else {
             // Đăng nhập THẤT BẠI: Nhét câu chửi/thông báo lỗi vào hộp (Request) và ném lại trang cũ
             request.setAttribute("ERROR_MSG", "Sai tên đăng nhập hoặc mật khẩu!");
