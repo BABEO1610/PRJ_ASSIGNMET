@@ -157,4 +157,70 @@ public class BillDAO extends DBContext {
             e.printStackTrace();
         }
     }
+    
+    public List<Bills> getBillsByApartmentId(int apartmentId) {
+        List<Bills> list = new ArrayList<>();
+
+        // Câu SQL: JOIN 3 bảng để lấy ServiceName
+        String sql = "SELECT b.BillId, b.ApartmentId, b.BillingMonth, b.BillingYear, "
+                   + "b.TotalAmount, b.Status, b.CreatedAt, "
+                   + "bd.ServiceTypeId, s.ServiceName "
+                   + "FROM Bills b "
+                   + "JOIN BillDetails bd ON b.BillId = bd.BillId "
+                   + "JOIN ServiceTypes s ON bd.ServiceTypeId = s.ServiceTypeId "
+                   + "WHERE b.ApartmentId = ? "
+                   + "ORDER BY b.CreatedAt DESC";
+
+        try {
+            PreparedStatement st = connection.prepareStatement(sql);
+            st.setInt(1, apartmentId);
+            ResultSet rs = st.executeQuery();
+
+            while (rs.next()) {
+                Bills b = new Bills();
+                b.setBillId(rs.getInt("BillId"));
+                b.setApartmentID(rs.getInt("ApartmentId"));
+                b.setBillingMonth(rs.getInt("BillingMonth"));
+                b.setBillingYear(rs.getInt("BillingYear"));
+                b.setTotalAmount(rs.getDouble("TotalAmount"));
+                b.setStatus(rs.getString("Status"));
+                b.setCreatedAt(rs.getDate("CreatedAt"));
+public List<Bills> getBillsByApartmentId(int apartmentId) {
+        List<Bills> list = new ArrayList<>();
+
+        // Câu SQL: JOIN 3 bảng để lấy ServiceName
+        String sql = "SELECT b.BillId, b.ApartmentId, b.BillingMonth, b.BillingYear, "
+                   + "b.TotalAmount, b.Status, b.CreatedAt, "
+                   + "bd.ServiceTypeId, s.ServiceName "
+                   + "FROM Bills b "
+                   + "JOIN BillDetails bd ON b.BillId = bd.BillId "
+                   + "JOIN ServiceTypes s ON bd.ServiceTypeId = s.ServiceTypeId "
+                   + "WHERE b.ApartmentId = ? "
+                   + "ORDER BY b.CreatedAt DESC";
+
+        try {
+            PreparedStatement st = connection.prepareStatement(sql);
+            st.setInt(1, apartmentId);
+            ResultSet rs = st.executeQuery();
+
+            while (rs.next()) {
+                Bills b = new Bills();
+                b.setBillId(rs.getInt("BillId"));
+                b.setApartmentID(rs.getInt("ApartmentId"));
+                b.setBillingMonth(rs.getInt("BillingMonth"));
+                b.setBillingYear(rs.getInt("BillingYear"));
+                b.setTotalAmount(rs.getDouble("TotalAmount"));
+                b.setStatus(rs.getString("Status"));
+                b.set
+                // Lấy ID và Tên dịch vụ từ các bảng đã JOIN
+                b.setServiceTypeId(rs.getInt("ServiceTypeId"));
+                b.setServiceName(rs.getString("ServiceName"));
+
+                list.add(b);
+            }
+        } catch (SQLException e) {
+            System.out.println("Lỗi getBillsByApartmentId: " + e.getMessage());
+        }
+        return list;
+    }
 }

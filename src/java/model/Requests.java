@@ -74,7 +74,7 @@ public class Requests {
     public void setApartmentID(int apartmentID) {
         this.apartmentID = apartmentID;
     }
-
+    
     public int getRequestTypeID() {
         return requestTypeID;
     }
