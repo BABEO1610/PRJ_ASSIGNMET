@@ -4,6 +4,18 @@
         <servlet-name>Home</servlet-name>
         <servlet-class>controller.Home</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>Home_Tenant_representative</servlet-name>
+        <servlet-class>controller.Home_Tenant_representative</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>MyManagedApartments</servlet-name>
+        <servlet-class>controller.MyManagedApartments</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>ApartmentDetail_Tenant</servlet-name>
+        <servlet-class>controller.ApartmentDetail_Tenant</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>Home</servlet-name>
         <url-pattern>/Home</url-pattern>
@@ -26,10 +38,22 @@
     </servlet-mapping>
     <servlet>
         <servlet-name>AssignRequest</servlet-name>
-        <servlet-class>controller.AssignRequest</servlet-class> 
+        <servlet-class>controller.AssignRequest</servlet-class>
     </servlet>
     <servlet-mapping>
         <servlet-name>AssignRequest</servlet-name>
         <url-pattern>/AssignRequest</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>Home_Tenant_representative</servlet-name>
+        <url-pattern>/Home_Tenant_representative</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>MyManagedApartments</servlet-name>
+        <url-pattern>/MyManagedApartments</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>ApartmentDetail_Tenant</servlet-name>
+        <url-pattern>/ApartmentDetail_Tenant</url-pattern>
     </servlet-mapping>
 </web-app>
