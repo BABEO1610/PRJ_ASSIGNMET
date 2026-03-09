@@ -5,26 +5,16 @@
 <html>
 <head>
     <meta charset="UTF-8">
-    <title>Trang chủ Cư dân</title>
+    <title>Trang chủ Đại diện khách thuê</title>
     <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/assets/home.css">
     <style>
-        /* CSS bổ sung nhỏ cho thông báo trống (bạn có thể copy vào file home.css luôn) */
-        .empty-message {
-            text-align: center;
-            padding: 30px;
-            font-style: italic;
-            color: #7AAACE;
-            background-color: #fcfcfc;
-            border: 1px dashed #9CD5FF;
-            border-radius: 8px;
-            margin-bottom: 20px;
-        }
+        .empty-message { text-align: center; padding: 30px; font-style: italic; color: #7AAACE; background-color: #fcfcfc; border: 1px dashed #9CD5FF; border-radius: 8px; margin-bottom: 20px; }
     </style>
 </head>
 <body>
 
 <div class="top-bar">
-    Cổng thông tin Cư dân
+    Cổng thông tin Đại diện Khách thuê
 </div>
 
 <div class="app-container">
@@ -36,19 +26,16 @@
                     <path fill-rule="evenodd" d="M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8zm8-7a7 7 0 0 0-5.468 11.37C3.242 11.226 4.805 10 8 10s4.757 1.225 5.468 2.37A7 7 0 0 0 8 1z"/>
                 </svg>
             </div>
-            <h4>Xin chào, ${sessionScope.USER_INFO.fullName}</h4>
+            <h4>${sessionScope.USER_INFO.fullName}</h4>
         </div>
         
-        <a href="Home_Resident" class="menu-item active">Trang chủ</a>
-        <a href="RoomInfo" class="menu-item">Thông tin căn hộ</a>
-        <a href="Services" class="menu-item">Dịch vụ</a>
-        <a href="user-bills" class="menu-item">Thanh toán</a>
-        <a href="Requirements" class="menu-item">Ý kiến</a>
+        <a href="Home_Tenant_representative" class="menu-item active">Trang chủ</a>
+        <a href="MyManagedApartments" class="menu-item">Căn hộ đang thuê</a>
         <a href="Logout" class="menu-item" style="margin-top: 20px;">Đăng xuất</a>
     </div>
 
     <div class="main-content">
-        <div class="banner">Chào mừng bạn về nhà!</div>
+        <div class="banner">Chào mừng trở lại!</div>
         
         <div class="content-section">
             
@@ -74,31 +61,33 @@
                                 <th>Tiêu đề</th>
                                 <th>Người gửi</th>
                                 <th>Ngày nhận</th>
-                                
+                                <th>Trạng thái</th>
                             </tr>
                         </thead>
                         <tbody id="notif-tbody">
                             <c:forEach items="${listNotif}" var="n">
                                 <tr>
                                     <td>
-                                        <a href="Home_Residents?id=${n.notificationId}" 
-                                        style="text-decoration:none; color:#355872; font-weight:bold;">
-                                        ${n.title}
+                                        <a href="Home_Tenant_representative?id=${n.notificationId}" style="text-decoration: none; color: #355872;">
+                                            <strong>${n.title}</strong>
                                         </a>
                                     </td>
-                                    <td>${n.senderName}</td> <td><fmt:formatDate value="${n.createdAt}" pattern="HH:mm dd/MM/yyyy"/></td>
-                                    
+                                    <td>Ban Quản lý</td>
+                                    <td><fmt:formatDate value="${n.createdAt}" pattern="HH:mm dd/MM/yyyy"/></td>
+                                    <td>
+                                        <span style="color: ${n.isRead ? '#7AAACE' : '#355872'}; font-weight: ${n.isRead ? 'normal' : 'bold'};">
+                                            ${n.isRead ? 'Đã xem' : 'Mới'}
+                                        </span>
+                                    </td>
                                 </tr>
                             </c:forEach>
                         </tbody>
                     </table>
-                    
-                    
                 </c:otherwise>
             </c:choose>
 
             <div class="section-header">
-                <h3>Yêu cầu của tôi</h3>
+                <h3>Yêu cầu từ các căn hộ đang thuê</h3>
                 <c:if test="${not empty listReq}">
                     <div class="pagination-controls">
                         <button onclick="prevPage('req')">❮ Trước</button>
@@ -110,25 +99,24 @@
             
             <c:choose>
                 <c:when test="${empty listReq}">
-                    <div class="empty-message">Bạn không có yêu cầu nào.</div>
+                    <div class="empty-message">Không có yêu cầu nào từ các căn hộ bạn quản lý.</div>
                 </c:when>
                 <c:otherwise>
                     <table>
                         <thead>
                             <tr>
-                                <th>STT</th>
+                                <th>Căn hộ</th> <th>Người cập nhật</th>
                                 <th>Tiêu đề</th>
-                                <th>Loại yêu cầu</th>
                                 <th>Trạng thái</th>
-                                <th>Ngày gửi</th>
+                                <th>Ngày cập nhật</th>
                             </tr>
                         </thead>
                         <tbody id="req-tbody">
-                            <c:forEach items="${listReq}" var="r" varStatus="loop">
+                            <c:forEach items="${listReq}" var="r">
                                 <tr>
-                                    <td>${loop.count}</td>
+                                    <td><strong>${r.apartmentNumber}</strong></td>
+                                    <td>${r.residentName}</td>
                                     <td>${r.title}</td>
-                                    <td>Bộ phận ${r.requestTypeID}</td>
                                     <td><strong>${r.status}</strong></td>
                                     <td><fmt:formatDate value="${r.createdAt}" pattern="HH:mm dd/MM/yyyy"/></td>
                                 </tr>
@@ -148,7 +136,7 @@
 
     function renderTable(tableType) {
         const tbody = document.getElementById(tableType + '-tbody');
-        if (!tbody) return; // Nếu không có bảng (rơi vào trường hợp empty), bỏ qua không chạy code dưới
+        if (!tbody) return; 
         
         const rows = tbody.getElementsByTagName('tr');
         const totalRows = rows.length;
@@ -161,19 +149,13 @@
         pages[tableType] = currentPage;
 
         const pageInfo = document.getElementById(tableType + '-page-info');
-        if (pageInfo) {
-            pageInfo.innerText = 'Trang ' + currentPage + ' / ' + totalPages;
-        }
+        if (pageInfo) pageInfo.innerText = 'Trang ' + currentPage + ' / ' + totalPages;
 
         const start = (currentPage - 1) * ROWS_PER_PAGE;
         const end = start + ROWS_PER_PAGE;
 
         for (let i = 0; i < totalRows; i++) {
-            if (i >= start && i < end) {
-                rows[i].style.display = '';
-            } else {
-                rows[i].style.display = 'none';
-            }
+            rows[i].style.display = (i >= start && i < end) ? '' : 'none';
         }
     }
 
