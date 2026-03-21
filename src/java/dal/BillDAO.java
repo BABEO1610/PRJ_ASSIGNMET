@@ -10,13 +10,14 @@ public class BillDAO extends DBContext {
 
         List<Bills> list = new ArrayList<>();
 
-        String sql = """
-            SELECT *
-            FROM Bills
-            WHERE ApartmentId = ?
-            AND Status = 'UNPAID'
-            ORDER BY BillId DESC
-        """;
+        String sql = "SELECT b.BillId, b.ApartmentId, b.BillingMonth, b.BillingYear, "
+                + "b.TotalAmount, b.Status, b.CreatedAt, "
+                + "bd.ServiceTypeId, s.ServiceName "
+                + "FROM Bills b "
+                + "JOIN BillDetails bd ON b.BillId = bd.BillId "
+                + "JOIN ServiceTypes s ON bd.ServiceTypeId = s.ServiceTypeId "
+                + "WHERE b.ApartmentId = ? AND b.Status='UNPAID' "
+                + "ORDER BY b.CreatedAt DESC";
 
         try (PreparedStatement ps = connection.prepareStatement(sql)) {
 
@@ -29,11 +30,16 @@ public class BillDAO extends DBContext {
                 Bills b = new Bills();
 
                 b.setBillId(rs.getInt("BillId"));
+                b.setApartmentID(rs.getInt("ApartmentId"));
                 b.setBillingMonth(rs.getInt("BillingMonth"));
                 b.setBillingYear(rs.getInt("BillingYear"));
                 b.setTotalAmount(rs.getDouble("TotalAmount"));
                 b.setStatus(rs.getString("Status"));
+                b.setCreatedAt(rs.getDate("CreatedAt"));
 
+                // Lấy ID và Tên dịch vụ từ các bảng đã JOIN
+                b.setServiceTypeId(rs.getInt("ServiceTypeId"));
+                b.setServiceName(rs.getString("ServiceName"));
                 list.add(b);
             }
 
@@ -43,7 +49,6 @@ public class BillDAO extends DBContext {
 
         return list;
     }
-
 
     public double getBillAmount(int billId) {
 
@@ -66,7 +71,6 @@ public class BillDAO extends DBContext {
         return 0;
     }
 
-
     public void updateBillsToPaid(String txnRef) {
 
         String sql = """
@@ -87,14 +91,13 @@ public class BillDAO extends DBContext {
         }
     }
 
-
     public void createBill(int apartmentId, double amount, int serviceId) {
         String insertBillSql = """
             INSERT INTO Bills 
             (ApartmentId, BillingMonth, BillingYear, TotalAmount, Status, CreatedAt) 
             VALUES (?, MONTH(GETDATE()), YEAR(GETDATE()), ?, 'UNPAID', GETDATE())
         """;
-        
+
         String insertDetailSql = """
             INSERT INTO BillDetails(BillId, ServiceTypeId, Quantity, Amount)
             VALUES (?, ?, 1, ?)
@@ -106,11 +109,11 @@ public class BillDAO extends DBContext {
             ps.setInt(1, apartmentId);
             ps.setDouble(2, amount);
             ps.executeUpdate();
-            
+
             ResultSet rs = ps.getGeneratedKeys();
             if (rs.next()) {
                 int newBillId = rs.getInt(1); // Đây là BillId mới
-                
+
                 // Lưu vào BillDetails để sau này có bằng chứng biết hóa đơn này của dịch vụ nào
                 PreparedStatement psDetail = connection.prepareStatement(insertDetailSql);
                 psDetail.setInt(1, newBillId);
@@ -122,7 +125,6 @@ public class BillDAO extends DBContext {
             e.printStackTrace();
         }
     }
-
 
     public void deleteLatestBillByApartment(int apartmentId, int serviceId) {
         // Câu SQL này dùng Join để tìm đích danh cái hóa đơn chưa thanh toán của đúng Dịch vụ bị hủy
@@ -157,19 +159,19 @@ public class BillDAO extends DBContext {
             e.printStackTrace();
         }
     }
-    
+
     public List<Bills> getBillsByApartmentId(int apartmentId) {
         List<Bills> list = new ArrayList<>();
 
         // Câu SQL: JOIN 3 bảng để lấy ServiceName
         String sql = "SELECT b.BillId, b.ApartmentId, b.BillingMonth, b.BillingYear, "
-                   + "b.TotalAmount, b.Status, b.CreatedAt, "
-                   + "bd.ServiceTypeId, s.ServiceName "
-                   + "FROM Bills b "
-                   + "JOIN BillDetails bd ON b.BillId = bd.BillId "
-                   + "JOIN ServiceTypes s ON bd.ServiceTypeId = s.ServiceTypeId "
-                   + "WHERE b.ApartmentId = ? "
-                   + "ORDER BY b.CreatedAt DESC";
+                + "b.TotalAmount, b.Status, b.CreatedAt, "
+                + "bd.ServiceTypeId, s.ServiceName "
+                + "FROM Bills b "
+                + "JOIN BillDetails bd ON b.BillId = bd.BillId "
+                + "JOIN ServiceTypes s ON bd.ServiceTypeId = s.ServiceTypeId "
+                + "WHERE b.ApartmentId = ? "
+                + "ORDER BY b.CreatedAt DESC";
 
         try {
             PreparedStatement st = connection.prepareStatement(sql);
@@ -185,33 +187,7 @@ public class BillDAO extends DBContext {
                 b.setTotalAmount(rs.getDouble("TotalAmount"));
                 b.setStatus(rs.getString("Status"));
                 b.setCreatedAt(rs.getDate("CreatedAt"));
-public List<Bills> getBillsByApartmentId(int apartmentId) {
-        List<Bills> list = new ArrayList<>();
 
-        // Câu SQL: JOIN 3 bảng để lấy ServiceName
-        String sql = "SELECT b.BillId, b.ApartmentId, b.BillingMonth, b.BillingYear, "
-                   + "b.TotalAmount, b.Status, b.CreatedAt, "
-                   + "bd.ServiceTypeId, s.ServiceName "
-                   + "FROM Bills b "
-                   + "JOIN BillDetails bd ON b.BillId = bd.BillId "
-                   + "JOIN ServiceTypes s ON bd.ServiceTypeId = s.ServiceTypeId "
-                   + "WHERE b.ApartmentId = ? "
-                   + "ORDER BY b.CreatedAt DESC";
-
-        try {
-            PreparedStatement st = connection.prepareStatement(sql);
-            st.setInt(1, apartmentId);
-            ResultSet rs = st.executeQuery();
-
-            while (rs.next()) {
-                Bills b = new Bills();
-                b.setBillId(rs.getInt("BillId"));
-                b.setApartmentID(rs.getInt("ApartmentId"));
-                b.setBillingMonth(rs.getInt("BillingMonth"));
-                b.setBillingYear(rs.getInt("BillingYear"));
-                b.setTotalAmount(rs.getDouble("TotalAmount"));
-                b.setStatus(rs.getString("Status"));
-                b.set
                 // Lấy ID và Tên dịch vụ từ các bảng đã JOIN
                 b.setServiceTypeId(rs.getInt("ServiceTypeId"));
                 b.setServiceName(rs.getString("ServiceName"));

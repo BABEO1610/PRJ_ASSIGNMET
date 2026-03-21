@@ -58,7 +58,7 @@
                         <table class="table-style">
                             <tr>
                                 <th>Chọn</th>
-                                <th>Mã hóa đơn</th>
+                                <th>Tên dịch vụ</th>
                                 <th>Tháng</th>
                                 <th>Năm</th>
                                 <th>Số tiền</th>
@@ -78,7 +78,7 @@
                                            name="billIds"
                                            value="<%=b.getBillId()%>">
                                 </td>
-                                <td><%=b.getBillId()%></td>
+                                <td><%=b.getServiceName()%></td>
                                 <td><%=b.getBillingMonth()%></td>
                                 <td><%=b.getBillingYear()%></td>
                                 <td><%=b.getTotalAmount()%> VNĐ</td>

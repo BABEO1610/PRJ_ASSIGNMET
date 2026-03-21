@@ -29,6 +29,9 @@ public class UserDAO extends DBContext {
                 + "WHERE u.Username = ? AND u.PasswordHash = ?";
 
         try {
+            if (this.connection == null) {
+                this.connection = getConnection();
+            }
             // 1. Chuẩn bị đường ống dẫn lệnh SQL
             PreparedStatement st = connection.prepareStatement(sql);
 
@@ -398,7 +401,7 @@ public class UserDAO extends DBContext {
 
         return roleId; // Trả về roleId (hoặc -1 nếu lỗi/không tồn tại)
     }
-    
+
     public int getApartmentIdByUser(int userId) {
 
         String sql = """
@@ -424,162 +427,167 @@ public class UserDAO extends DBContext {
 
         return -1;
     }
-    
+
     public List<Apartments> getAllApartments() {
-    List<Apartments> list = new ArrayList<>();
-    // SQL: Lấy thông tin căn hộ + Lấy FullName từ bảng Users gán cho OwnerName
-    String sql = "SELECT a.[ApartmentId], a.[ApartmentNumber], a.[Floor], a.[Area], "
-               + "a.[Types], a.[Status], a.[OwnerId], u.[FullName] AS OwnerName "
-               + "FROM [Apartments] a LEFT JOIN [Users] u ON a.[OwnerId] = u.[UserId]";
+        List<Apartments> list = new ArrayList<>();
+        // SQL: Lấy thông tin căn hộ + Lấy FullName từ bảng Users gán cho OwnerName
+        String sql = "SELECT a.[ApartmentId], a.[ApartmentNumber], a.[Floor], a.[Area], "
+                + "a.[Types], a.[Status], a.[OwnerId], u.[FullName] AS OwnerName "
+                + "FROM [Apartments] a LEFT JOIN [Users] u ON a.[OwnerId] = u.[UserId]";
 
-    try {
-        PreparedStatement ps = connection.prepareStatement(sql);
-        ResultSet rs = ps.executeQuery();
-        while (rs.next()) {
-            Apartments apt = new Apartments();
-            apt.setApartmentId(rs.getInt("ApartmentId"));
-            apt.setApartmentNumber(rs.getString("ApartmentNumber"));
-            apt.setFloor(rs.getInt("Floor"));
-            apt.setArea(rs.getDouble("Area"));
-            apt.setTypes(rs.getNString("Types"));
-            apt.setStatus(rs.getNString("Status"));
-            
-            // LỖI 1: Gán OwnerId là kiểu int
-            apt.setOwnerId(rs.getInt("OwnerId")); 
-            
-            // LỖI 2: Lấy OwnerName từ kết quả JOIN (vì bảng Apartments không có cột này)
-            apt.setOwnerName(rs.getNString("OwnerName")); 
+        try {
+            PreparedStatement ps = connection.prepareStatement(sql);
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                Apartments apt = new Apartments();
+                apt.setApartmentId(rs.getInt("ApartmentId"));
+                apt.setApartmentNumber(rs.getString("ApartmentNumber"));
+                apt.setFloor(rs.getInt("Floor"));
+                apt.setArea(rs.getDouble("Area"));
+                apt.setTypes(rs.getNString("Types"));
+                apt.setStatus(rs.getNString("Status"));
 
-            list.add(apt);
+                // LỖI 1: Gán OwnerId là kiểu int
+                apt.setOwnerId(rs.getInt("OwnerId"));
+
+                // LỖI 2: Lấy OwnerName từ kết quả JOIN (vì bảng Apartments không có cột này)
+                apt.setOwnerName(rs.getNString("OwnerName"));
+
+                list.add(apt);
+            }
+        } catch (SQLException e) {
+            System.out.println("Lỗi getAllApartments: " + e.getMessage());
         }
-    } catch (SQLException e) {
-        System.out.println("Lỗi getAllApartments: " + e.getMessage());
+        return list;
     }
-    return list;
-}
-    
+
     public Apartments getApartmentById(int id) {
-    String sql = "SELECT a.*, u.FullName AS OwnerName FROM Apartments a "
-               + "LEFT JOIN Users u ON a.OwnerId = u.UserId WHERE a.ApartmentId = ?";
-    try (PreparedStatement ps = connection.prepareStatement(sql)) {
-        ps.setInt(1, id);
-        ResultSet rs = ps.executeQuery();
-        if (rs.next()) {
-            Apartments a = new Apartments();
-            a.setApartmentId(rs.getInt("ApartmentId"));
-            a.setApartmentNumber(rs.getString("ApartmentNumber"));
-            a.setFloor(rs.getInt("Floor"));
-            a.setArea(rs.getDouble("Area"));
-            a.setTypes(rs.getNString("Types"));
-            a.setStatus(rs.getNString("Status"));
-            a.setOwnerName(rs.getNString("OwnerName"));
-            return a;
+        String sql = "SELECT a.*, u.FullName AS OwnerName FROM Apartments a "
+                + "LEFT JOIN Users u ON a.OwnerId = u.UserId WHERE a.ApartmentId = ?";
+        try (PreparedStatement ps = connection.prepareStatement(sql)) {
+            ps.setInt(1, id);
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) {
+                Apartments a = new Apartments();
+                a.setApartmentId(rs.getInt("ApartmentId"));
+                a.setApartmentNumber(rs.getString("ApartmentNumber"));
+                a.setFloor(rs.getInt("Floor"));
+                a.setArea(rs.getDouble("Area"));
+                a.setTypes(rs.getNString("Types"));
+                a.setStatus(rs.getNString("Status"));
+                a.setOwnerName(rs.getNString("OwnerName"));
+                return a;
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
         }
-    } catch (SQLException e) { e.printStackTrace(); }
-    return null;
-}
-    
-    public boolean updateApartment(int id, String number, int floor, double area, String types, String status) {
-    String sql = "UPDATE [Apartments] SET [ApartmentNumber] = ?, [Floor] = ?, "
-               + "[Area] = ?, [Types] = ?, [Status] = ? WHERE [ApartmentId] = ?";
-    try (PreparedStatement ps = connection.prepareStatement(sql)) {
-        ps.setString(1, number);
-        ps.setInt(2, floor);
-        ps.setDouble(3, area);
-        ps.setNString(4, types);
-        ps.setNString(5, status);
-        ps.setInt(6, id);
-        return ps.executeUpdate() > 0;
-    } catch (SQLException e) {
-        e.printStackTrace();
-        return false;
-    }
-}
-    
-    public boolean deleteApartment(int id) {
-    // Câu lệnh SQL xóa căn hộ dựa trên ApartmentId
-    String sql = "DELETE FROM [Apartments] WHERE [ApartmentId] = ?";
-    
-    // Kiểm tra kết nối trước khi thực hiện
-    if (this.connection == null) {
-        this.connection = getConnection();
+        return null;
     }
 
-    try (PreparedStatement ps = connection.prepareStatement(sql)) {
-        ps.setInt(1, id);
-        
-        // Thực thi câu lệnh
-        int affectedRows = ps.executeUpdate();
-        return affectedRows > 0;
-        
-    } catch (SQLException e) {
-        // In lỗi ra console để debug (ví dụ: lỗi Foreign Key Constraint)
-        System.out.println("Lỗi khi xóa căn hộ: " + e.getMessage());
-        return false;
+    public boolean updateApartment(int id, String number, int floor, double area, String types, String status) {
+        String sql = "UPDATE [Apartments] SET [ApartmentNumber] = ?, [Floor] = ?, "
+                + "[Area] = ?, [Types] = ?, [Status] = ? WHERE [ApartmentId] = ?";
+        try (PreparedStatement ps = connection.prepareStatement(sql)) {
+            ps.setString(1, number);
+            ps.setInt(2, floor);
+            ps.setDouble(3, area);
+            ps.setNString(4, types);
+            ps.setNString(5, status);
+            ps.setInt(6, id);
+            return ps.executeUpdate() > 0;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
     }
-}
-    
+
+    public boolean deleteApartment(int id) {
+        // Câu lệnh SQL xóa căn hộ dựa trên ApartmentId
+        String sql = "DELETE FROM [Apartments] WHERE [ApartmentId] = ?";
+
+        // Kiểm tra kết nối trước khi thực hiện
+        if (this.connection == null) {
+            this.connection = getConnection();
+        }
+
+        try (PreparedStatement ps = connection.prepareStatement(sql)) {
+            ps.setInt(1, id);
+
+            // Thực thi câu lệnh
+            int affectedRows = ps.executeUpdate();
+            return affectedRows > 0;
+
+        } catch (SQLException e) {
+            // In lỗi ra console để debug (ví dụ: lỗi Foreign Key Constraint)
+            System.out.println("Lỗi khi xóa căn hộ: " + e.getMessage());
+            return false;
+        }
+    }
+
     public boolean addApartment(String number, int floor, double area, String types, String status, int ownerId) {
-    // Câu lệnh INSERT chính xác theo bảng Apartments của bạn
-    String sql = "INSERT INTO [Apartments] ([ApartmentNumber], [Floor], [Area], [Types], [Status], [OwnerId]) "
-               + "VALUES (?, ?, ?, ?, ?, ?)";
-    
-    try (PreparedStatement ps = connection.prepareStatement(sql)) {
-        ps.setString(1, number);
-        ps.setInt(2, floor);
-        ps.setDouble(3, area);
-        ps.setNString(4, types);
-        ps.setNString(5, status);
-        
-        // Xử lý logic OwnerId: Nếu là 0 (không nhập) thì set NULL trong DB
-        if (ownerId > 0) {
-            ps.setInt(6, ownerId);
-        } else {
-            ps.setNull(6, java.sql.Types.INTEGER);
+        // Câu lệnh INSERT chính xác theo bảng Apartments của bạn
+        String sql = "INSERT INTO [Apartments] ([ApartmentNumber], [Floor], [Area], [Types], [Status], [OwnerId]) "
+                + "VALUES (?, ?, ?, ?, ?, ?)";
+
+        try (PreparedStatement ps = connection.prepareStatement(sql)) {
+            ps.setString(1, number);
+            ps.setInt(2, floor);
+            ps.setDouble(3, area);
+            ps.setNString(4, types);
+            ps.setNString(5, status);
+
+            // Xử lý logic OwnerId: Nếu là 0 (không nhập) thì set NULL trong DB
+            if (ownerId > 0) {
+                ps.setInt(6, ownerId);
+            } else {
+                ps.setNull(6, java.sql.Types.INTEGER);
+            }
+
+            return ps.executeUpdate() > 0;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
         }
-        
-        return ps.executeUpdate() > 0;
-    } catch (SQLException e) {
-        e.printStackTrace();
-        return false;
     }
-}
-    
+
     public Apartments getApartmentByResidentId(int userId) {
-    // Truy vấn căn hộ thông qua bảng trung gian ApartmentResidents
-    String sql = "SELECT a.* FROM Apartments a " +
-                 "JOIN ApartmentResidents ar ON a.ApartmentId = ar.ApartmentId " +
-                 "WHERE ar.UserId = ? AND ar.IsActive = 1";
-    try {
-        if (connection == null) connection = getConnection();
-        PreparedStatement ps = connection.prepareStatement(sql);
-        ps.setInt(1, userId);
-        ResultSet rs = ps.executeQuery();
-        if (rs.next()) {
-            Apartments a = new Apartments();
-            a.setApartmentId(rs.getInt("ApartmentId"));
-            a.setApartmentNumber(rs.getString("ApartmentNumber"));
-            a.setFloor(rs.getInt("Floor"));
-            a.setArea(rs.getDouble("Area"));
-            a.setTypes(rs.getNString("Types"));
-            a.setStatus(rs.getNString("Status"));
-            return a;
+        // Truy vấn căn hộ thông qua bảng trung gian ApartmentResidents
+        String sql = "SELECT a.* FROM Apartments a "
+                + "JOIN ApartmentResidents ar ON a.ApartmentId = ar.ApartmentId "
+                + "WHERE ar.UserId = ? AND ar.IsActive = 1";
+        try {
+            if (connection == null) {
+                connection = getConnection();
+            }
+            PreparedStatement ps = connection.prepareStatement(sql);
+            ps.setInt(1, userId);
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) {
+                Apartments a = new Apartments();
+                a.setApartmentId(rs.getInt("ApartmentId"));
+                a.setApartmentNumber(rs.getString("ApartmentNumber"));
+                a.setFloor(rs.getInt("Floor"));
+                a.setArea(rs.getDouble("Area"));
+                a.setTypes(rs.getNString("Types"));
+                a.setStatus(rs.getNString("Status"));
+                return a;
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
         }
-    } catch (SQLException e) {
-        e.printStackTrace();
+        return null;
     }
-    return null;
-}
+
     public List<Requests> getRequestsByTenantId(int tenantId) {
         List<Requests> list = new ArrayList<>();
 
         // SQL JOIN 3 bảng: Requests, Users (lấy tên người gửi), Apartments (lấy tên phòng và lọc theo TenantId)
         String sql = "SELECT r.*, u.FullName AS ResidentName, a.ApartmentNumber "
-                   + "FROM Requests r "
-                   + "LEFT JOIN Users u ON r.ResidentId = u.UserId "
-                   + "LEFT JOIN Apartments a ON r.ApartmentId = a.ApartmentId "
-                   + "WHERE a.TenantId = ? "
-                   + "ORDER BY r.CreatedAt DESC";
+                + "FROM Requests r "
+                + "LEFT JOIN Users u ON r.ResidentId = u.UserId "
+                + "LEFT JOIN Apartments a ON r.ApartmentId = a.ApartmentId "
+                + "WHERE a.TenantId = ? "
+                + "ORDER BY r.CreatedAt DESC";
 
         try {
             PreparedStatement st = connection.prepareStatement(sql);
@@ -607,4 +615,212 @@ public class UserDAO extends DBContext {
         }
         return list;
     }
+
+    public List<Users> getAllUsers() {
+        List<Users> list = new ArrayList<>();
+        String sql = "SELECT * FROM Users";
+        try {
+            if (this.connection == null) {
+                this.connection = getConnection();
+            }
+            PreparedStatement ps = connection.prepareStatement(sql);
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                Users u = new Users();
+                u.setUserId(rs.getInt("UserId"));
+                u.setUsername(rs.getString("Username"));
+                u.setFullName(rs.getString("FullName"));
+                u.setEmail(rs.getString("Email"));
+                u.setPhone(rs.getString("Phone"));
+                u.setIsActive(rs.getBoolean("IsActive"));
+
+                Roles r = new Roles();
+                r.setRoleId(rs.getInt("RoleId"));
+                u.setRole(r);
+
+                list.add(u);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return list;
+    }
+
+    public boolean addAccount(String user, String pass, String name, String email, String phone, int roleId) {
+        // Câu lệnh SQL chèn dữ liệu vào bảng Users
+        String sql = "INSERT INTO [Users] ([Username], [PasswordHash], [FullName], [Email], [Phone], [RoleId], [IsActive], [CreatedAt]) "
+                + "VALUES (?, ?, ?, ?, ?, ?, 1, GETDATE())";
+
+        try {
+            if (this.connection == null) {
+                this.connection = getConnection();
+            }
+            PreparedStatement ps = connection.prepareStatement(sql);
+            ps.setString(1, user);
+            ps.setString(2, pass); // Lưu ý: Nên mã hóa password nếu hệ thống yêu cầu
+            ps.setNString(3, name);
+            ps.setString(4, email);
+            ps.setString(5, phone);
+            ps.setInt(6, roleId);
+
+            return ps.executeUpdate() > 0;
+        } catch (SQLException e) {
+            System.out.println("Lỗi addAccount: " + e.getMessage());
+            return false;
+        }
+    }
+
+    public boolean deleteUser(int id) {
+        // 1. Khai báo SQL - Mở rộng subquery để dọn dẹp triệt để RequestLogs
+        String sqlNotifs = "DELETE FROM Notifications WHERE SenderId = ? OR ReceiverId = ?";
+
+        // SỬA ĐỔI: Xóa log của mọi yêu cầu mà User này là người gửi, người duyệt hoặc người thực hiện
+        String sqlLogs = "DELETE FROM RequestLogs WHERE UpdatedBy = ? "
+                + "OR RequestId IN (SELECT RequestId FROM Requests WHERE ResidentId = ? OR AssignedTo = ? OR ApprovedBy = ?)";
+
+        String sqlRequests = "DELETE FROM Requests WHERE ResidentId = ? OR AssignedTo = ? OR ApprovedBy = ?";
+        String sqlServices = "DELETE FROM ResidentServices WHERE ResidentId = ?"; //
+        String sqlStaff = "DELETE FROM StaffProfiles WHERE UserId = ?"; //
+        String sqlResidents = "DELETE FROM ApartmentResidents WHERE UserId = ?";
+        String sqlApts = "UPDATE Apartments SET OwnerId = NULL WHERE OwnerId = ?";
+        String sqlUser = "DELETE FROM Users WHERE UserId = ?";
+
+        try {
+            if (this.connection == null) {
+                this.connection = getConnection();
+            }
+            connection.setAutoCommit(false);
+
+            // BƯỚC 1: Xóa thông báo
+            try (PreparedStatement ps = connection.prepareStatement(sqlNotifs)) {
+                ps.setInt(1, id);
+                ps.setInt(2, id);
+                ps.executeUpdate();
+            }
+
+            // BƯỚC 2: Xóa nhật ký xử lý yêu cầu (Nâng cấp subquery)
+            try (PreparedStatement ps = connection.prepareStatement(sqlLogs)) {
+                ps.setInt(1, id); // UpdatedBy
+                ps.setInt(2, id); // ResidentId trong subquery
+                ps.setInt(3, id); // AssignedTo trong subquery
+                ps.setInt(4, id); // ApprovedBy trong subquery
+                ps.executeUpdate();
+            }
+
+            // BƯỚC 3: Xóa yêu cầu (Requests)
+            try (PreparedStatement ps = connection.prepareStatement(sqlRequests)) {
+                ps.setInt(1, id);
+                ps.setInt(2, id);
+                ps.setInt(3, id);
+                ps.executeUpdate();
+            }
+
+            // BƯỚC 4: Xóa dịch vụ cư dân đăng ký
+            try (PreparedStatement ps = connection.prepareStatement(sqlServices)) {
+                ps.setInt(1, id);
+                ps.executeUpdate();
+            }
+
+            // BƯỚC 5: Xóa hồ sơ nhân viên
+            try (PreparedStatement ps = connection.prepareStatement(sqlStaff)) {
+                ps.setInt(1, id);
+                ps.executeUpdate();
+            }
+
+            // BƯỚC 6: Xóa liên kết cư dân - căn hộ
+            try (PreparedStatement ps = connection.prepareStatement(sqlResidents)) {
+                ps.setInt(1, id);
+                ps.executeUpdate();
+            }
+
+            // BƯỚC 7: Gỡ vai trò chủ nhà
+            try (PreparedStatement ps = connection.prepareStatement(sqlApts)) {
+                ps.setInt(1, id);
+                ps.executeUpdate();
+            }
+
+            // BƯỚC 8: XÓA TÀI KHOẢN
+            try (PreparedStatement ps = connection.prepareStatement(sqlUser)) {
+                ps.setInt(1, id);
+                int affectedRows = ps.executeUpdate();
+                if (affectedRows > 0) {
+                    connection.commit();
+                    return true;
+                }
+            }
+
+        } catch (SQLException e) {
+            if (connection != null) {
+                try {
+                    connection.rollback();
+                } catch (SQLException ex) {
+                }
+            }
+            System.out.println("Lỗi Hard Delete triệt để: " + e.getMessage());
+        } finally {
+            try {
+                if (connection != null) {
+                    connection.setAutoCommit(true);
+                    connection.close();
+                }
+            } catch (SQLException e) {
+            }
+        }
+        return false;
+    }
+
+    // 1. Lấy thông tin 1 người dùng theo ID
+    public Users getUserById(int id) {
+        String sql = "SELECT * FROM Users WHERE UserId = ?";
+        try {
+            if (this.connection == null) {
+                this.connection = getConnection();
+            }
+            PreparedStatement ps = connection.prepareStatement(sql);
+            ps.setInt(1, id);
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) {
+                Users u = new Users();
+                u.setUserId(rs.getInt("UserId"));
+                u.setUsername(rs.getString("Username"));
+                u.setFullName(rs.getNString("FullName"));
+                u.setEmail(rs.getString("Email"));
+                u.setPhone(rs.getString("Phone"));
+                u.setIsActive(rs.getBoolean("IsActive"));
+
+                // Gán đối tượng Roles
+                Roles r = new Roles();
+                r.setRoleId(rs.getInt("RoleId"));
+                u.setRole(r);
+                return u;
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+// 2. Cập nhật thông tin tài khoản
+    public boolean updateUser(int id, String name, String email, String phone, int roleId, boolean active) {
+        //them code
+        String sql = "UPDATE [Users] SET [FullName] = ?, [Email] = ?, [Phone] = ?, "
+                + "[RoleId] = ?, [IsActive] = ? WHERE [UserId] = ?";
+        try {
+            if (this.connection == null) {
+                this.connection = getConnection();
+            }
+            PreparedStatement ps = connection.prepareStatement(sql);
+            ps.setNString(1, name);
+            ps.setString(2, email);
+            ps.setString(3, phone);
+            ps.setInt(4, roleId);
+            ps.setBoolean(5, active);
+            ps.setInt(6, id);
+            return ps.executeUpdate() > 0;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
 }
