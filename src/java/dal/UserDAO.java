@@ -177,7 +177,7 @@ public class UserDAO extends DBContext {
                 + "FROM Users u "
                 + "JOIN StaffProfiles sp ON u.UserId = sp.UserId "
                 + "JOIN Positions p ON sp.PositionId = p.PositionId "
-                + "WHERE u.RoleId = 2 AND u.IsActive = 1";
+                + "WHERE u.RoleId = 3 AND u.IsActive = 1";
         try {
             PreparedStatement st = connection.prepareStatement(sql);
             ResultSet rs = st.executeQuery();
@@ -243,7 +243,7 @@ public class UserDAO extends DBContext {
     public boolean insertEmployee(Users u, int positionId) {
         try {
             connection.setAutoCommit(false);
-            String sqlUser = "INSERT INTO Users (Username, PasswordHash, FullName, Email, Phone, RoleId, IsActive) VALUES (?, ?, ?, ?, ?, 2, 1)";
+            String sqlUser = "INSERT INTO Users (Username, PasswordHash, FullName, Email, Phone, RoleId, IsActive) VALUES (?, ?, ?, ?, ?, 3, 1)";
             PreparedStatement st1 = connection.prepareStatement(sqlUser, PreparedStatement.RETURN_GENERATED_KEYS);
             st1.setString(1, u.getUsername());
             st1.setString(2, u.getPasswordHash()); // Thực tế nên mã hóa MD5/SHA256
