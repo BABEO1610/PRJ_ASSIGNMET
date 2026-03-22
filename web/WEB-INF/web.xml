@@ -2,19 +2,19 @@
 <web-app version="6.0" xmlns="https://jakarta.ee/xml/ns/jakartaee" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="https://jakarta.ee/xml/ns/jakartaee https://jakarta.ee/xml/ns/jakartaee/web-app_6_0.xsd">
     <servlet>
         <servlet-name>Home</servlet-name>
-        <servlet-class>controller.Home</servlet-class>
+        <servlet-class>controller.Manager.Home</servlet-class>
     </servlet>
     <servlet>
         <servlet-name>Home_Tenant_representative</servlet-name>
-        <servlet-class>controller.Home_Tenant_representative</servlet-class>
+        <servlet-class>controller.Tenant.Home_Tenant_representative</servlet-class>
     </servlet>
     <servlet>
         <servlet-name>MyManagedApartments</servlet-name>
-        <servlet-class>controller.MyManagedApartments</servlet-class>
+        <servlet-class>controller.Tenant.MyManagedApartments</servlet-class>
     </servlet>
     <servlet>
         <servlet-name>ApartmentDetail_Tenant</servlet-name>
-        <servlet-class>controller.ApartmentDetail_Tenant</servlet-class>
+        <servlet-class>controller.Tenant.ApartmentDetail_Tenant</servlet-class>
     </servlet>
     <servlet-mapping>
         <servlet-name>Home</servlet-name>
@@ -30,7 +30,7 @@
     </servlet-mapping>
     <servlet>
         <servlet-name>Requests</servlet-name>
-        <servlet-class>controller.Requests</servlet-class>
+        <servlet-class>controller.Manager.Requests</servlet-class>
     </servlet>
     <servlet-mapping>
         <servlet-name>Requests</servlet-name>
@@ -38,7 +38,7 @@
     </servlet-mapping>
     <servlet>
         <servlet-name>AssignRequest</servlet-name>
-        <servlet-class>controller.AssignRequest</servlet-class>
+        <servlet-class>controller.Manager.AssignRequest</servlet-class>
     </servlet>
     <servlet-mapping>
         <servlet-name>AssignRequest</servlet-name>
