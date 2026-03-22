@@ -33,8 +33,8 @@
                     <h4>Xin chào, ${sessionScope.USER_INFO.fullName}</h4>
                 </div>
 
-                <a href="Home_Residents" class="menu-item ">Trang chủ</a>
-                <a href="Room_info" class="menu-item">Thông tin căn hộ</a>
+                <a href="Home_Residents" class="menu-item">Trang chủ</a>
+                <a href="RoomInfo" class="menu-item">Thông tin căn hộ</a>
                 <a href="Services" class="menu-item">Dịch vụ</a>
                 <a href="user-bills" class="menu-item active">Thanh toán</a>
                 <a href="Requirements" class="menu-item">Ý kiến</a>
