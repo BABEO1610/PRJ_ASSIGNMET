@@ -23,7 +23,7 @@ public class VNPayCreatePaymentServlet extends HttpServlet {
         if (billIds == null) {
             String errBill="Hãy chọn một khoản thanh toán";
             request.setAttribute("errBill", errBill);
-            request.getRequestDispatcher("/Resident/user-bills").forward(request, response);
+            request.getRequestDispatcher("user-bills").forward(request, response);
             //response.sendRedirect("user-bills");
             return;
         }
